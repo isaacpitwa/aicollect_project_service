@@ -1,7 +1,7 @@
 version: '3.2'
 services:
-  clientmanagementservice:
-    image: registry.gitlab.com/aicollect-mvp2/backend/clientmanagementservice:latest
+  projectmanagementservicev1:
+    image: registry.gitlab.com/aicollect-mvp2/backend/projectmanagementservicev1:latest
     ports:
       - "4005:4005"
     volumes:
