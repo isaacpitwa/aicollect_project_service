@@ -1,0 +1,30 @@
+import * as dotenv from "dotenv";
+import * as path from "path";
+
+dotenv.config();
+let workingpath: string = path.resolve(__dirname).split("/build")[0];
+workingpath = workingpath +'/secrets/.env';
+dotenv.config({ path: workingpath });
+
+export const kafkaHost = process.env.kafkaHost;
+export const kafkaport = process.env.kafkaport;
+export const PORT = process.env.PORT;
+export const emailingQue = process.env.emailingQue;
+export const emailingQueGrp = process.env.emailingQueGrp;
+export const LOG_LEVEL = process.env.LOG_LEVEL;
+export const SECRETE = process.env.SECRETE;
+export const redishost = process.env.redishost;
+export const redisport = process.env.redisport;
+export const redispassword = process.env.redispassword;
+export const enviroment = process.env.enviroment;
+export const psqldb = process.env.psqldb;
+export const psqlpass = process.env.psqlpass;
+export const psqlurl = process.env.psqlurl;
+export const psqluser = process.env.psqluser;
+export const psqlport = process.env.psqlport;
+export const frontendhost = process.env.frontendhost;
+export const mongoport  = process.env.mongoport;
+export const mongourl  = process.env.mongourl;
+export const mngusername  = process.env.mngusername;
+export const mngpassword  = process.env.mngpassword;
+export const mongocollection = process.env.mongocollection;

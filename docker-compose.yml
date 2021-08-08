@@ -1,0 +1,8 @@
+version: '3.2'
+services:
+  clientmanagementservice:
+    image: registry.gitlab.com/aicollect-mvp2/backend/clientmanagementservice:latest
+    ports:
+      - "4005:4005"
+    volumes:
+      - /home/rockside/env/projectservice/:/secrets
