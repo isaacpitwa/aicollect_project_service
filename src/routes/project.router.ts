@@ -9,6 +9,7 @@ import mongooseschemas from "../models/mongoose";
 import questionaireModel from "../models/questionaires.model";
 import sectorModel from "../models/sector.model";
 import sectorModulesModel from "../models/sectormodules.model";
+import aggregations from "../models/mongoose/aggregations";
 const moment = require('moment');
 const ObjectId  = require('mongodb').ObjectID
 
@@ -296,8 +297,6 @@ class projectManagement {
         res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
       }else{
         if(saved){
-            console.log(saved)
-
             const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
             const newProjectQuestionaire = new projectQuestionaireModel({
               projectid: ObjectId(req.body.projectid),
@@ -401,6 +400,22 @@ class projectManagement {
     })
   }
 
+  getAllProjectQuestionaires = async (req:Request,res:Response) => {
+    const connection = getDatabaseConnection(req.body.requester.store);
+    const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
+    const options = {page: req.body.page?req.body.page:1,limit:10,collation: {locale: 'en'},sort:{_id:-1}};
+    
+    const myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionaires([req.body.where]));
+    projectQuestionaireModel.aggregatePaginate(myAggregate, options, (error: any, results: any)=> {
+        if(error){
+          winstonobj.logWihWinston({status:false,msg:"Failed to get project prohect questionaires",error:JSON.stringify(error)},"projectmanagementservice")
+          res.status(500).json({status:false,msg:"Something went wrong, Please try again later"});
+        }else{
+            res.status(200).json({status:true,msg:"List populated",data:results});
+        }
+    })
+  }
+
   routes(): void {
     this.router.post("/saveNewProject",auth.checkAuth,validator.saveNewProject,this.saveNewProject);
     this.router.post("/fetchAllProjects",auth.checkAuth,this.fetchAllProjects);
@@ -413,6 +428,7 @@ class projectManagement {
     this.router.post("/saveModuleQuestionaire",auth.checkAuth,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
     this.router.post("/deleteQuestionaire",auth.checkAuth,validator.deleteQuestionaire,this.deleteQuestionaire);
     this.router.post("/getAllQuestionaires",auth.checkAuth,this.getAllQuestionaires);
+    this.router.post("/getAllProjectQuestionaires",auth.checkAuth,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
     this.router.post("/getProjectProfile",auth.checkAuth,validator.getProjectProfile,this.getProjectProfile);
   }
 }

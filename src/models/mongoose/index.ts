@@ -1,5 +1,6 @@
 import {model, Schema} from 'mongoose';
 const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 
 //user schema
 const userschema = new Schema({
@@ -56,7 +57,7 @@ projectmodulesschema.plugin(mongoosePaginate);
 
 //project questionaires
 const projectquestionairesschema = new Schema({
-  projectid: {type:Schema.Types.String,require:true},
+  projectid: {type:Schema.Types.ObjectId,require:true},
   moduleid: {type:Schema.Types.ObjectId,require:true},
   questionaireid: {type:Schema.Types.ObjectId,require:true},
   addedBy:  userschema,
@@ -64,6 +65,8 @@ const projectquestionairesschema = new Schema({
 },
 {timestamps:true});
 projectquestionairesschema.plugin(mongoosePaginate);
+projectquestionairesschema.plugin(aggregatePaginate);
+
 
 //questionaire
 const questionairesschema = new Schema({
