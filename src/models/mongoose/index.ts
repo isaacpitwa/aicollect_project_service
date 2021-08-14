@@ -17,6 +17,7 @@ const sectorschema = new Schema({
 //
 const moduleschema = new Schema({
   modulename:{type:String,required:true},
+  type:{type:String,required:true},
   id:{type:Number,trim:true},
 });
 
@@ -49,6 +50,7 @@ projectteamsschema.plugin(mongoosePaginate);
 const projectmodulesschema = new Schema({
   module: moduleschema,
   addedBy:userschema,
+  type: {type:Schema.Types.String},
   projectid:  {type:Schema.Types.ObjectId},
   isDeleted: {type:Boolean,default:false}
 },
@@ -75,7 +77,8 @@ const questionairesschema = new Schema({
   formjson:{type:Schema.Types.Array,required:true},
   addedBy:  userschema,
   postgresparentid:{type:Schema.Types.Number,default:null},
-  mongodbparentid:{type:Schema.Types.String,default:null},
+  mongodbparentid:{type:Schema.Types.ObjectId,default:null},
+  version: {type:Schema.Types.String,default:'V.1'},
   isDeleted: {type:Boolean,default:false},
   isActive: {type:Boolean,default:true},
 },

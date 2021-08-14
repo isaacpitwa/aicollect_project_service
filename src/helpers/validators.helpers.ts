@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 let Joi = require("joi");
 const dateextension = require("joi-date-extensions");
 Joi = Joi.extend(dateextension);
+Joi.objectId = require('joi-objectid')(Joi)
 
 class validatorClass {
   constructor() {}
@@ -384,6 +385,28 @@ class validatorClass {
     const result = Joi.validate(
       {
         questionaireid:req.body.questionaireid,
+      },
+      schema
+    );
+    result
+    .then((result: any) => {
+      next();
+    })
+    .catch((err: any) => {
+      this.populateErrors.bind(this)(err, res);
+    });
+  }
+
+  editQuesitoinaire = (req:Request,res:Response,next:NextFunction) => {
+    const schema = Joi.object().keys({
+      questionaireid: Joi.string().required().label("Questionaire Id is required"),
+      formjson: Joi.array().required().label("Form JSON is required"),
+    });
+
+    const result = Joi.validate(
+      {
+        questionaireid:req.body.questionaireid,
+        formjson:req.body.formjson,
       },
       schema
     );

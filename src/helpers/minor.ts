@@ -80,6 +80,7 @@ class minor {
       attributes:[
         "id",
         "modulename",
+        "type"  
       ],
       raw:true
     }).then((modules:any) => {

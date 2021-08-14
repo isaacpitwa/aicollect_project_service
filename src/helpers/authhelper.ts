@@ -87,16 +87,32 @@ class AuthClass{
                   }
                 }
               }else{
-                return res.status(401).json({msg:"Unauthorized"});
+                return res.status(401).json({status:false,msg:"Unauthorized"});
               }
             }).catch((error:Error) => {
               winstonobj.logWihWinston({status:false,message:"failed to check auth",error:JSON.stringify(error)},"UserManagementService")
-              return res.status(401).json({msg:"Unauthorized"});
+              return res.status(401).json({status:false,msg:"Unauthorized"});
             })
           }
         });
     }else{
-      return res.status(401).json({msg:"Unauthorized"});
+      return res.status(401).json({status:false,msg:"Unauthorized"});
+    }
+  }
+
+  clientCheck (req:any,res:any,next:NextFunction){
+    if(req.body.requester.clientid){
+      next();
+    }else{
+      return res.status(400).json({status:false,msg:"Permission denied"});
+    }
+  }
+
+  nocClientCheck (req:any,res:any,next:NextFunction){
+    if(!req.body.requester.clientid){
+      next();
+    }else{
+      return res.status(400).json({status:false,msg:"Permission denied"});
     }
   }
 

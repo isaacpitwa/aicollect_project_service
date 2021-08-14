@@ -487,23 +487,23 @@ class questionaireManagement {
   };
 
   routes(): void {
-    this.router.post("/saveSector",auth.checkAuth,validator.saveSector,this.saveSector);
-    this.router.post("/disableSector",auth.checkAuth,validator.disableSector,this.disableSector);
-    this.router.post("/deleteSector",auth.checkAuth,validator.disableSector,this.deleteSector);
-    this.router.post("/enableSector",auth.checkAuth,validator.disableSector,this.enableSector);
-    this.router.post("/getAllSectors",auth.checkAuth,this.adminGetAllSectors);
-    this.router.post("/clientGetAllSectors",auth.checkAuth,this.clientGetAllSectors);
-    this.router.post("/addSectorModules",auth.checkAuth,validator.addSectorModules,this.addSectorModules);
-    this.router.post("/editSectorModules",auth.checkAuth,validator.editSectorModules,this.editSectorModules);
-    this.router.post("/disableSectorModules",auth.checkAuth,validator.disableSectorModules,this.disableSectorModules);
-    this.router.post("/enableSectorModules",auth.checkAuth,validator.disableSectorModules,this.enableSectorModules);
-    this.router.post("/deleteSectorModules",auth.checkAuth,validator.disableSectorModules,this.deleteSectorModules);
-    this.router.post("/fetchAllModules",auth.checkAuth,this.fetchAllModules);
-    this.router.post("/saveNewTemplate",auth.checkAuth,validator.saveNewTemplate,this.saveNewTemplate);
-    this.router.post("/getQuestionareTemplates",auth.checkAuth,validator.getQuestionareTemplates,this.getQuestionareTemplates);
-    this.router.post("/deleteQuestionaireTemplate",auth.checkAuth,validator.deleteQuestionaireTemplate,this.deleteQuestionaireTemplate);
-    this.router.post("/disablQuestionaireTemplate",auth.checkAuth,validator.deleteQuestionaireTemplate,this.disablQuestionaireTemplate);
-    this.router.post("/activeQuestionaireTemplate",auth.checkAuth,validator.deleteQuestionaireTemplate,this.activeQuestionaireTemplate);
+    this.router.post("/saveSector",auth.checkAuth,auth.nocClientCheck,validator.saveSector,this.saveSector);
+    this.router.post("/disableSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.disableSector);
+    this.router.post("/deleteSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.deleteSector);
+    this.router.post("/enableSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.enableSector);
+    this.router.post("/getAllSectors",auth.checkAuth,auth.nocClientCheck,this.adminGetAllSectors);
+    this.router.post("/clientGetAllSectors",auth.checkAuth,auth.nocClientCheck,this.clientGetAllSectors);
+    this.router.post("/addSectorModules",auth.checkAuth,auth.nocClientCheck,validator.addSectorModules,this.addSectorModules);
+    this.router.post("/editSectorModules",auth.checkAuth,auth.nocClientCheck,validator.editSectorModules,this.editSectorModules);
+    this.router.post("/disableSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.disableSectorModules);
+    this.router.post("/enableSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.enableSectorModules);
+    this.router.post("/deleteSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.deleteSectorModules);
+    this.router.post("/fetchAllModules",auth.checkAuth,auth.nocClientCheck,this.fetchAllModules);
+    this.router.post("/saveNewTemplate",auth.checkAuth,auth.nocClientCheck,validator.saveNewTemplate,this.saveNewTemplate);
+    this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.nocClientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
+    this.router.post("/deleteQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.deleteQuestionaireTemplate);
+    this.router.post("/disablQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.disablQuestionaireTemplate);
+    this.router.post("/activeQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.activeQuestionaireTemplate);
   }
 }
 

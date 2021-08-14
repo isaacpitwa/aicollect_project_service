@@ -84,46 +84,54 @@ class projectManagement {
   }
 
   deleteProject = (req:Request,res:Response) => {
-    try{
-      const connection = getDatabaseConnection(req.body.requester.store);
-      const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
+    if(!ObjectId.isValid(req.body.projectid)){
+      res.status(400).json({status:false,msg:"Invalid project ID"});
+    }else{
+      try{
+        const connection = getDatabaseConnection(req.body.requester.store);
+        const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
 
-      projectsModel.findOneAndUpdate({_id:ObjectId(req.body.projectid)},{$set:{isdelete:true}},{ returnNewDocument: true })
-      .then((document:any) => {
-        if(document) {
-          res.status(200).json({status:true,msg:`Project deleted`});
-        } else {
-          res.status(400).json({status:false,msg:"Unknown project ID"});
-        }
-      }).catch((err) => {
-        winstonobj.logWihWinston({status:false,msg:`Failed find project ${req.body.projectid}`,error:JSON.stringify(err)},"projectmanagementservice")
+        projectsModel.findOneAndUpdate({_id:ObjectId(req.body.projectid)},{$set:{isdelete:true}},{ returnNewDocument: true })
+        .then((document:any) => {
+          if(document) {
+            res.status(200).json({status:true,msg:`Project deleted`});
+          } else {
+            res.status(400).json({status:false,msg:"Unknown project ID"});
+          }
+        }).catch((err) => {
+          winstonobj.logWihWinston({status:false,msg:`Failed find project ${req.body.projectid}`,error:JSON.stringify(err)},"projectmanagementservice")
+          res.status(500).json({status:false,msg:"Something went wrong, please try again later"});
+        })
+      }catch(error){
+        winstonobj.logWihWinston({status:false,msg:`Failed find project ${req.body.projectid}`,error:JSON.stringify(error)},"projectmanagementservice")
         res.status(500).json({status:false,msg:"Something went wrong, please try again later"});
-      })
-    }catch(error){
-      winstonobj.logWihWinston({status:false,msg:`Failed find project ${req.body.projectid}`,error:JSON.stringify(error)},"projectmanagementservice")
-      res.status(500).json({status:false,msg:"Something went wrong, please try again later"});
+      }
     }
   }
 
   editProject = (req:Request,res:Response) => {
-    try{
-      const connection = getDatabaseConnection(req.body.requester.store);
-      const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
-      const toupdate = {projectname:req.body.projectname,description:req.body.description}
-      projectsModel.findOneAndUpdate({_id:ObjectId(req.body.projectid)},{$set:toupdate},{ returnNewDocument: true })
-      .then((document:any) => {
-        if(document) {
-          res.status(200).json({status:true,msg:`Project Edited`});
-        } else {
-          res.status(400).json({status:false,msg:"Unknown project ID"});
-        }
-      }).catch((err) => {
-        winstonobj.logWihWinston({status:false,msg:`Failed find project yo edit ${req.body.projectid}`,error:JSON.stringify(err)},"projectmanagementservice")
+    if(!ObjectId.isValid(req.body.projectid)){
+      res.status(400).json({status:false,msg:"Invalid project ID"});
+    }else{
+      try{
+        const connection = getDatabaseConnection(req.body.requester.store);
+        const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
+        const toupdate = {projectname:req.body.projectname,description:req.body.description}
+        projectsModel.findOneAndUpdate({_id:ObjectId(req.body.projectid)},{$set:toupdate},{ returnNewDocument: true })
+        .then((document:any) => {
+          if(document) {
+            res.status(200).json({status:true,msg:`Project Edited`});
+          } else {
+            res.status(400).json({status:false,msg:"Unknown project ID"});
+          }
+        }).catch((err) => {
+          winstonobj.logWihWinston({status:false,msg:`Failed find project yo edit ${req.body.projectid}`,error:JSON.stringify(err)},"projectmanagementservice")
+          res.status(500).json({status:false,msg:"Something went wrong, please try again later"});
+        })
+      }catch(error){
+        winstonobj.logWihWinston({status:false,msg:`Failed find project to edit ${req.body.projectid}`,error:JSON.stringify(error)},"projectmanagementservice")
         res.status(500).json({status:false,msg:"Something went wrong, please try again later"});
-      })
-    }catch(error){
-      winstonobj.logWihWinston({status:false,msg:`Failed find project to edit ${req.body.projectid}`,error:JSON.stringify(error)},"projectmanagementservice")
-      res.status(500).json({status:false,msg:"Something went wrong, please try again later"});
+      }
     }
   }
 
@@ -172,38 +180,42 @@ class projectManagement {
   }
 
   getProjectTeam = (req:Request,res:Response) => {
-    const connection = getDatabaseConnection(req.body.requester.store);
-    const projcetTeamsModel = connection.models['projectteams'] || connection.model("projectteams", mongooseschemas.projectteamsschema);
+    if(!ObjectId.isValid(req.body.projectid)){
+      res.status(400).json({status:false,msg:"Invalid project ID"});
+    }else{
+      const connection = getDatabaseConnection(req.body.requester.store);
+      const projcetTeamsModel = connection.models['projectteams'] || connection.model("projectteams", mongooseschemas.projectteamsschema);
 
-     // create filters array
-    const filters: any = { isDeleted:false,projectid:ObjectId(req.body.projectid)};
-    if(req.body.where){
-      req.body.where.names ? filters.names = req.body.where.names : '';
-      req.body.where.role ? filters.role = req.body.where.role : '';
-      if (req.body.where.date) {
-          const from = moment(req.body.where.date.from, 'DD-MM-YYYY');
-          const to = moment(req.body.where.date.to, 'DD-MM-YYYY');
-          (req.body.where.date.to == req.body.where.date.from) ? filters.createdAt = from : '';
-          (req.body.where.date.to != req.body.where.date.from) ? filters.createdAt = {
-                      $gte: new Date(from),
-                      $lte: new Date(to)
-                  }
-            : '';
-        }
-     }
+      // create filters array
+      const filters: any = { isDeleted:false,projectid:ObjectId(req.body.projectid)};
+      if(req.body.where){
+        req.body.where.names ? filters.names = req.body.where.names : '';
+        req.body.where.role ? filters.role = req.body.where.role : '';
+        if (req.body.where.date) {
+            const from = moment(req.body.where.date.from, 'DD-MM-YYYY');
+            const to = moment(req.body.where.date.to, 'DD-MM-YYYY');
+            (req.body.where.date.to == req.body.where.date.from) ? filters.createdAt = from : '';
+            (req.body.where.date.to != req.body.where.date.from) ? filters.createdAt = {
+                        $gte: new Date(from),
+                        $lte: new Date(to)
+                    }
+              : '';
+          }
+      }
 
-     //set pagination options
-     const options = {page: req.body.page?req.body.page:1,limit: 10,collation: {locale: 'en'},sort:{createdAt:-1},
-     select: {_id:1,names:1,role:1,createdAt:1}};
+      //set pagination options
+      const options = {page: req.body.page?req.body.page:1,limit: 10,collation: {locale: 'en'},sort:{createdAt:-1},
+      select: {_id:1,names:1,role:1,createdAt:1}};
 
-     projcetTeamsModel.paginate(filters, options, (err:any, result:any) => {
-         if(err){
-              winstonobj.logWihWinston({status:false,msg:"Failed to get all projects",error:JSON.stringify(err)},"projectmanagementservice")
-             res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
-         }else{
-             res.status(200).json({status:true,msg:"project fetched",data:result});
-         }
-     });
+      projcetTeamsModel.paginate(filters, options, (err:any, result:any) => {
+          if(err){
+                winstonobj.logWihWinston({status:false,msg:"Failed to get all projects",error:JSON.stringify(err)},"projectmanagementservice")
+              res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+          }else{
+              res.status(200).json({status:true,msg:"project fetched",data:result});
+          }
+      });
+      }
   }
 
   removeUserFromProjectTeam = (req:Request,res:Response) => {
@@ -294,7 +306,7 @@ class projectManagement {
     newQuestionaire.save((error:any,saved:any)=>{
       if(error){
         winstonobj.logWihWinston({status:false,msg:"Failed to save questionaire",error:JSON.stringify(error)},"projectmanagementservice")
-        res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+        res.status(200).json({status:false,msg:"Something went wrong,please try again later"});
       }else{
         if(saved){
             const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
@@ -309,7 +321,7 @@ class projectManagement {
                 winstonobj.logWihWinston({status:false,msg:"Failed to save project questionaire",error:JSON.stringify(error)},"projectmanagementservice")
                 res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
               }else{
-                res.status(500).json({status:true,msg:"Saved"});
+                res.status(200).json({status:true,msg:"Saved"});
               }
             });
         }else{
@@ -318,6 +330,23 @@ class projectManagement {
         }
       }
     });
+  }
+
+  editQuesitoinaire = async (req:Request,res:Response) => {
+    if(!ObjectId.isValid(req.body.questionaireid)){
+      res.status(400).json({status:false,msg:"Invalid questionaire ID"});
+    }else{
+      const connection = getDatabaseConnection(req.body.requester.store);
+      const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
+      QuestionaireModel.findOneAndUpdate({_id:ObjectId(req.body.questionaireid)},{formjson:req.body.formjson},(error:any,questionaire:any) => {
+        if(error){
+          winstonobj.logWihWinston({status:false,msg:"Failed to edit questionaire",error:JSON.stringify(error)},"projectmanagementservice")
+          res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+        }else{
+          res.status(200).json({status:true,msg:"New version saved"});
+        }
+      });
+    } 
   }
 
   getAllQuestionaires = async (req:Request,res:Response) => {
@@ -356,48 +385,74 @@ class projectManagement {
   }
 
   deleteQuestionaire = (req:Request,res:Response) => {
-    const connection = getDatabaseConnection(req.body.requester.store);
-    const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
+    if(!ObjectId.isValid(req.body.questionaireid)){
+      res.status(400).json({status:false,msg:"Invalid questionaire ID"});
+    }else{
+      const connection = getDatabaseConnection(req.body.requester.store);
+      const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
 
-    QuestionaireModel.updateOne({_id:ObjectId(req.body.questionaireid)},{$set:{isDeleted:true}}, (err:any, result:any) => {
+      QuestionaireModel.updateOne({_id:ObjectId(req.body.questionaireid)},{$set:{isDeleted:true}}, (err:any, result:any) => {
+          if(err){
+              winstonobj.logWihWinston({status:false,msg:"Failed to delete questionaire",error:JSON.stringify(err)},"projectmanagementservice")
+              res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+          }else{
+              res.status(200).json({status:true,msg:"Questionaire deleted"});
+          }
+      });
+    }
+  }
+
+  getQuesitoinaireLatestVersion = (req:Request,res:Response) => {
+    if(!ObjectId.isValid(req.body.questionaireid)){
+      res.status(400).json({status:false,msg:"Invalid questionaire ID"});
+    }else{
+      const connection = getDatabaseConnection(req.body.requester.store);
+      const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
+
+      QuestionaireModel.findOne({_id:ObjectId(req.body.questionaireid)}, (err:any, result:any) => {
         if(err){
             winstonobj.logWihWinston({status:false,msg:"Failed to delete questionaire",error:JSON.stringify(err)},"projectmanagementservice")
             res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
         }else{
             res.status(200).json({status:true,msg:"Questionaire deleted"});
         }
-    });
+      });
+    }
   }
 
   getProjectProfile =  (req:Request,res:Response) => {
-    const connection = getDatabaseConnection(req.body.requester.store);
-    const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
+    if(!ObjectId.isValid(req.body.projectid)){
+      res.status(400).json({status:false,msg:"Invalid project ID"});
+    }else{
+      const connection = getDatabaseConnection(req.body.requester.store);
+      const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
 
-    projectsModel.aggregate([
-      { $match: { _id: ObjectId(req.body.projectid) } },
-      {
+      projectsModel.aggregate([
+        { $match: { _id: ObjectId(req.body.projectid) } },
+        {
+            $lookup: {
+              from: "projectmodules",
+              localField: "_id",
+              foreignField: "projectid",
+              as: "modules"
+            }
+        },
+        {
           $lookup: {
-            from: "projectmodules",
+            from: "projectteams",
             localField: "_id",
             foreignField: "projectid",
-            as: "modules"
+            as: "team"
           }
-      },
-      {
-        $lookup: {
-          from: "projectteams",
-          localField: "_id",
-          foreignField: "projectid",
-          as: "team"
         }
-      }
-    ]).then((projectdetails:any) => {
-      res.status(200).json({status:true,msg:"success",data:projectdetails});
+      ]).then((projectdetails:any) => {
+        res.status(200).json({status:true,msg:"success",data:projectdetails});
 
-    }).catch((error:any)=>{
-      winstonobj.logWihWinston({status:false,msg:"Failed to get project profile",error:JSON.stringify(error)},"projectmanagementservice")
-      res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
-    })
+      }).catch((error:any)=>{
+        winstonobj.logWihWinston({status:false,msg:"Failed to get project profile",error:JSON.stringify(error)},"projectmanagementservice")
+        res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+      })
+    }
   }
 
   getAllProjectQuestionaires = async (req:Request,res:Response) => {
@@ -408,7 +463,7 @@ class projectManagement {
     const myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionaires([req.body.where]));
     projectQuestionaireModel.aggregatePaginate(myAggregate, options, (error: any, results: any)=> {
         if(error){
-          winstonobj.logWihWinston({status:false,msg:"Failed to get project prohect questionaires",error:JSON.stringify(error)},"projectmanagementservice")
+          winstonobj.logWihWinston({status:false,msg:"Failed to get project questionaires",error:JSON.stringify(error)},"projectmanagementservice")
           res.status(500).json({status:false,msg:"Something went wrong, Please try again later"});
         }else{
             res.status(200).json({status:true,msg:"List populated",data:results});
@@ -417,19 +472,21 @@ class projectManagement {
   }
 
   routes(): void {
-    this.router.post("/saveNewProject",auth.checkAuth,validator.saveNewProject,this.saveNewProject);
-    this.router.post("/fetchAllProjects",auth.checkAuth,this.fetchAllProjects);
-    this.router.post("/deleteProject",auth.checkAuth,validator.deleteProject,this.deleteProject);
-    this.router.post("/editProject",auth.checkAuth,validator.editProject,this.editProject);
-    this.router.post("/addTeamMember",auth.checkAuth,validator.addTeamMember,this.addTeamMember);
-    this.router.post("/getProjectTeam",auth.checkAuth,validator.getProjectTeam,this.getProjectTeam);
-    this.router.post("/removeUserFromProjectTeam",auth.checkAuth,validator.removeUserFromProjectTeam,this.removeUserFromProjectTeam);
-    this.router.post("/getQuestionareTemplates",auth.checkAuth,validator.getQuestionareTemplates,this.getQuestionareTemplates);
-    this.router.post("/saveModuleQuestionaire",auth.checkAuth,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
-    this.router.post("/deleteQuestionaire",auth.checkAuth,validator.deleteQuestionaire,this.deleteQuestionaire);
-    this.router.post("/getAllQuestionaires",auth.checkAuth,this.getAllQuestionaires);
-    this.router.post("/getAllProjectQuestionaires",auth.checkAuth,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
-    this.router.post("/getProjectProfile",auth.checkAuth,validator.getProjectProfile,this.getProjectProfile);
+    this.router.post("/saveNewProject",auth.checkAuth,auth.clientCheck,validator.saveNewProject,this.saveNewProject);
+    this.router.post("/fetchAllProjects",auth.checkAuth,auth.clientCheck,this.fetchAllProjects);
+    this.router.post("/deleteProject",auth.checkAuth,auth.clientCheck,validator.deleteProject,this.deleteProject);
+    this.router.post("/editProject",auth.checkAuth,auth.clientCheck,validator.editProject,this.editProject);
+    this.router.post("/addTeamMember",auth.checkAuth,auth.clientCheck,validator.addTeamMember,this.addTeamMember);
+    this.router.post("/getProjectTeam",auth.checkAuth,auth.clientCheck,validator.getProjectTeam,this.getProjectTeam);
+    this.router.post("/removeUserFromProjectTeam",auth.checkAuth,auth.clientCheck,validator.removeUserFromProjectTeam,this.removeUserFromProjectTeam);
+    this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.clientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
+    this.router.post("/saveModuleQuestionaire",auth.checkAuth,auth.clientCheck,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
+    this.router.post("/deleteQuestionaire",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.deleteQuestionaire);
+    this.router.post("/editQuesitoinaire",auth.checkAuth,auth.clientCheck,validator.editQuesitoinaire,this.editQuesitoinaire);
+    this.router.post("/getQuesitoinaireLatestVersion",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.getQuesitoinaireLatestVersion);
+    this.router.post("/getAllQuestionaires",auth.checkAuth,auth.clientCheck,this.getAllQuestionaires);
+    this.router.post("/getAllProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
+    this.router.post("/getProjectProfile",auth.checkAuth,auth.clientCheck,validator.getProjectProfile,this.getProjectProfile);
   }
 }
 
