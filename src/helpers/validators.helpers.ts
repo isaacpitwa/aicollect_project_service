@@ -150,7 +150,6 @@ class validatorClass {
     const schema = Joi.object().keys({
       title : Joi.string().required().label("title  is required"),
       description:Joi.string().required().label("Description is required"),
-      type:Joi.string().required().valid("REG","INS").label("Type is required"),
     });
 
     const result = Joi.validate(
@@ -195,6 +194,8 @@ class validatorClass {
       moduledescription : Joi.string().required().label("Module description is required"),
       ismandatory : Joi.boolean().label("ismadantory should be true or false"),
       sectorid : Joi.number().required().label("Sector ID is required"),
+      type:Joi.string().required().valid("REG","INS").label("Type is required"),
+
     });
 
     const result = Joi.validate(
@@ -202,7 +203,8 @@ class validatorClass {
         modulename:req.body.modulename,
         moduledescription:req.body.moduledescription,
         ismandatory:req.body.ismandatory,
-        sectorid:req.body.sectorid
+        sectorid:req.body.sectorid,
+        type:req.body.type,
       },
       schema
     );

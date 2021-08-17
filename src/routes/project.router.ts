@@ -483,7 +483,7 @@ class projectManagement {
     this.router.post("/saveModuleQuestionaire",auth.checkAuth,auth.clientCheck,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
     this.router.post("/deleteQuestionaire",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.deleteQuestionaire);
     this.router.post("/editQuesitoinaire",auth.checkAuth,auth.clientCheck,validator.editQuesitoinaire,this.editQuesitoinaire);
-    this.router.post("/getQuesitoinaireLatestVersion",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.getQuesitoinaireLatestVersion);
+    // this.router.post("/getQuesitoinaireLatestVersion",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.getQuesitoinaireLatestVersion);
     this.router.post("/getAllQuestionaires",auth.checkAuth,auth.clientCheck,this.getAllQuestionaires);
     this.router.post("/getAllProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
     this.router.post("/getProjectProfile",auth.checkAuth,auth.clientCheck,validator.getProjectProfile,this.getProjectProfile);
