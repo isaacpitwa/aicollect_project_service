@@ -301,7 +301,7 @@ class projectManagement {
       formjson:req.body.formjson,
       addedBy:  {userid:req.body.requester.userid,name:req.body.requester.names},
       postgresparentid:req.body.postgresparentid ? req.body.postgresparentid : null,
-      mongodbparentid:req.body.mongodbparentid ? req.body.mongodbparentid : "",
+      mongodbparentid:req.body.mongodbparentid ? ObjectId(req.body.mongodbparentid) : "",
     });
     newQuestionaire.save((error:any,saved:any)=>{
       if(error){
@@ -369,7 +369,7 @@ class projectManagement {
               : '';
           }
       }
-
+      console.log(filters)
       //set pagination options
       const options = {page: req.body.page?req.body.page:1,limit: 10,collation: {locale: 'en'},sort:{createdAt:-1},
       select: {_id:1,title:1,description:1,postgresparentid:1,mongodbparentid:1,formjson:1,addedBy:1,createdAt:1,isActive:1}};

@@ -107,6 +107,7 @@ class questionaireManagement {
           "description",
           "isActive"
         ],
+        order: [["createdAt", "DESC"]],
         include:[
           {
             model:administratorModel,
@@ -161,6 +162,7 @@ class questionaireManagement {
           modulename: req.body.modulename,
           moduledescription: req.body.moduledescription,
           sectorid:req.body.sectorid,
+          type:req.body.type,
           ismandatory:req.body.ismandatory || false,
           addedBy:req.body.requester.userid
         });

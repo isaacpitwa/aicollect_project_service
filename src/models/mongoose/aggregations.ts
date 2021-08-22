@@ -14,10 +14,11 @@ const questionaireschema = {
 
 //completed jobs
 const filterQuestionaires = function (and:any) {
+    console.log(ObjectId(and[0].projectid))
     return [
         {
             $match: { 
-                projectid : ObjectId(and[0].projectid),
+                projectid : and[0].projectid ? ObjectId(and[0].projectid):undefined,
                 moduleid : and[0].moduleid ? ObjectId(and[0].moduleid) : undefined,
             }
         },
