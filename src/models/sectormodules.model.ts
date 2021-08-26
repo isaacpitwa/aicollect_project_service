@@ -1,6 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database.connect";
 import administratorModel from "./administrators.model";
+import questionaireModel from "./questionaires.model";
 import sectorModel from "./sector.model";
 
 
@@ -67,4 +68,5 @@ const sectorModulesModel = sequelize.define(
 
 sectorModulesModel.belongsTo(administratorModel, { as: "submittedby", foreignKey: "addedBy" });
 sectorModulesModel.belongsTo(sectorModel, { as: "sector", foreignKey: "sectorid" });
+
 export default sectorModulesModel;

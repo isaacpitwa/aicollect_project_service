@@ -69,6 +69,7 @@ const questionaireModel = sequelize.define(
 questionaireModel.belongsTo(administratorModel, { as: "submittedby", foreignKey: "addedBy" });
 questionaireModel.belongsTo(questionaireModel, { as: "clonnedFrom", foreignKey: "parentid" });
 questionaireModel.belongsTo(sectorModel, { as: "sector", foreignKey: "sectorid" });
-questionaireModel.belongsTo(sectorModulesModel, { as: "module", foreignKey: "moduleid" });
+questionaireModel.belongsTo(sectorModulesModel, {foreignKey: 'moduleid'});
+sectorModulesModel.hasMany(questionaireModel, {as:'questionaires',foreignKey: 'moduleid'});
 
 export default questionaireModel;

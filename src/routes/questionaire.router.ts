@@ -330,7 +330,7 @@ class questionaireManagement {
         const questionaire = await questionaireModel.create({
           title: req.body.title,
           description:req.body.description,
-          ismandatory:req.body.ismandatory,
+          ismandatory:req.body.ismandatory || false,
           sectorid:req.body.sectorid,
           moduleid:req.body.moduleid,
           parentid:req.body.parentid,

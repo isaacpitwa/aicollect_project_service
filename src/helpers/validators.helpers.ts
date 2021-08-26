@@ -269,7 +269,7 @@ class validatorClass {
     const schema = Joi.object().keys({
       title: Joi.string().required().label("Questionaire title is required"),
       description: Joi.string().required().label("Questionaire description is required"),
-      ismandatory: Joi.boolean().optional().label("Is mandatory should be true or false"),
+      ismandatory: Joi.boolean().required().label("Is mandatory should be true or false"),
       sectorid: Joi.number().required().label("Sectorid is required"),
       moduleid: Joi.number().optional().label("Module ID should be a number"),
       parentid: Joi.number().optional().label("Parent questionaire ID should be a number"),
@@ -280,7 +280,7 @@ class validatorClass {
       {
         title:req.body.title,
         description:req.body.description,
-        ismandatory:req.body.ismandatory ? req.body.ismandatory : undefined,
+        ismandatory:req.body.ismandatory,
         sectorid:req.body.sectorid,
         moduleid:req.body.moduleid ? req.body.moduleid :undefined, 
         parentid:req.body.parentid ? req.body.parentid :undefined, 

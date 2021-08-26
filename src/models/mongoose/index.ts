@@ -81,6 +81,7 @@ const questionairesschema = new Schema({
   version: {type:Schema.Types.String,default:'V.1'},
   isDeleted: {type:Boolean,default:false},
   isActive: {type:Boolean,default:true},
+  ismandatory: {type:Schema.Types.Boolean,default:false}
 },
 {timestamps:true});
 questionairesschema.plugin(mongoosePaginate);

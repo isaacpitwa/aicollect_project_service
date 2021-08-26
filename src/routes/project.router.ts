@@ -42,10 +42,10 @@ class projectManagement {
             res.status(200).json({status: true,message: "Project details saved"});  
           }
       })
-  } catch (error) {
-    winstonobj.logWihWinston({status:false,message:"Failed to save projcet details",error:JSON.stringify(error)},"projectmanagementservice");
-    res.status(500).json({status:false,msg:'Something went wrong,please try again later'});
-  }
+    } catch (error) {
+      winstonobj.logWihWinston({status:false,message:"Failed to save projcet details",error:JSON.stringify(error)},"projectmanagementservice");
+      res.status(500).json({status:false,msg:'Something went wrong,please try again later'});
+    }
   };
 
   fetchAllProjects = (req:Request,res:Response) => {
@@ -443,6 +443,33 @@ class projectManagement {
             localField: "_id",
             foreignField: "projectid",
             as: "team"
+          }
+        },
+        {
+          $project:{
+            _id:1,
+            projectname:1,
+            description:1,
+            sector:{
+              title:1
+            },
+            addedBy:{
+              name:1
+            },
+            createdAt:1,
+            updatedAt:1,
+            modules:{
+              module:{
+                _id:1,
+                modulename:1,
+              },
+              type:1
+            },
+            team:{
+              _id:1,
+              names:1,
+              role:1
+            }
           }
         }
       ]).then((projectdetails:any) => {

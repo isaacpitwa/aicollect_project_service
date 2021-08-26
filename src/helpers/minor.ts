@@ -11,6 +11,7 @@ import getDatabaseConnection from "../config/mongodb.connect";
 import mongooseschemas from "../models/mongoose";
 const CsvParser = require("json2csv").Parser;
 const ObjectId  = require('mongodb').ObjectID
+import questionaireModel from "../models/questionaires.model";
 
 class minor {
   constructor() {}
@@ -82,21 +83,70 @@ class minor {
         "modulename",
         "type"  
       ],
-      raw:true
+      include: [{
+        model: questionaireModel,
+        where: { ismandatory:true,isActive:true,isDeleted:false },
+        as:"questionaires",
+        required: false,
+        raw:true
+      }],
+      nested:true
     }).then((modules:any) => {
-      requester.name = requester.names;
-       const toinsert = modules.map(item => ({projectid:ObjectId(project),module:item,addedby:requester}));
-       this.saveAutoAssingedModules(requester.store,toinsert);
+      
+      modules.forEach(element => {
+          element = element.dataValues; 
+          const connection = getDatabaseConnection(requester.store);
+          const projectsmodulesModel = connection.models['projectmodules'] || connection.model("projectmodules", mongooseschemas.projectmodulesschema);
+
+          requester.name = requester.names;
+
+          const newmodule = new projectsmodulesModel({
+            projectid:ObjectId(project),
+            addedBy: {userid:1,name:"AiCollect BOT"},
+            module:{id:element.id,modulename:element.modulename,type:element.type||'UNI'}
+          });
+
+          newmodule.save((error:any,assigned:any) => {
+            if(error){
+              winstonobj.logWihWinston({status:false,message:"Failed to save auto assign single module",error:JSON.stringify(error)},"ProjectManagementLogs");
+            }else{
+              element.questionaires.forEach((questionaire)=> {
+                questionaire.dataValues['formjson'] = JSON.parse(questionaire.dataValues['formschema'])
+                this.saveAutoAssingedQuestionaire(requester.store,questionaire.dataValues);
+              });
+            }
+          });
+      });
+
     }).catch((error:Error) => {
+        console.log(error)
         winstonobj.logWihWinston({status:false,message:"Failed to find auto assign modules",error:JSON.stringify(error)},"PorjectManagementLogs");
     });
   } 
 
-  saveAutoAssingedModules = (store:string,data:Array<object>) => {
+  saveAutoAssingedQuestionaire = (store:string,data:any) => {
     try {
+          console.log(data)
           const connection = getDatabaseConnection(store);
-          const projectsmodulesModel = connection.models['projectmodules'] || connection.model("projectmodules", mongooseschemas.projectmodulesschema);
-          projectsmodulesModel.insertMany(data);
+          const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
+
+          const newQuestionaire = new QuestionaireModel({
+            title: data.title,
+            description: data.description,
+            formjson:data.formjson,
+            addedBy: {userid:1,name:"AiCollect BOT"},
+            ismandatory:true,
+            postgresparentid:null,
+            mongodbparentid:null,
+          });
+
+          newQuestionaire.save((error:any,saved:any)=>{
+            if(error){
+              winstonobj.logWihWinston({status:false,msg:"Failed to save auto questionaire",error:JSON.stringify(error)},"projectmanagementservice")
+            }else{
+              winstonobj.logWihWinston({status:true,msg:"saved auto questionaire",error:JSON.stringify(error)},"projectmanagementservice")
+            }
+          });
       } catch (error) {
         winstonobj.logWihWinston({status:false,message:"Failed to save project modules",error:JSON.stringify(error)},"projectmanagementservice");
     }
