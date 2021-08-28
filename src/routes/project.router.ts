@@ -301,7 +301,7 @@ class projectManagement {
       formjson:req.body.formjson,
       addedBy:  {userid:req.body.requester.userid,name:req.body.requester.names},
       postgresparentid:req.body.postgresparentid ? req.body.postgresparentid : null,
-      mongodbparentid:req.body.mongodbparentid ? ObjectId(req.body.mongodbparentid) : "",
+      mongodbparentid:req.body.mongodbparentid ? ObjectId(req.body.mongodbparentid) : null,
     });
     newQuestionaire.save((error:any,saved:any)=>{
       if(error){
@@ -318,8 +318,9 @@ class projectManagement {
             })  
             newProjectQuestionaire.save((error:any,savedQuestionaire:any)=>{
               if(error){
-                winstonobj.logWihWinston({status:false,msg:"Failed to save project questionaire",error:JSON.stringify(error)},"projectmanagementservice")
-                res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+                console.log(error)
+                // winstonobj.logWihWinston({status:false,msg:"Failed to save project questionaire",error:JSON.stringify(error)},"projectmanagementservice")
+                // res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
               }else{
                 res.status(200).json({status:true,msg:"Saved"});
               }
@@ -459,9 +460,12 @@ class projectManagement {
             createdAt:1,
             updatedAt:1,
             modules:{
+              _id:1,
+              addedBy:1,
               module:{
                 _id:1,
                 modulename:1,
+                  type:1
               },
               type:1
             },

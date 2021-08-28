@@ -443,8 +443,8 @@ class validatorClass {
 
   getAllProjectQuestionaires = (req:Request,res:Response,next:NextFunction) => {
     const schema = Joi.object().keys({
-      projectid: Joi.string().optional().label("Project Id is required"),
-      moduleid: Joi.string().optional().label("Module Id is required"),
+      projectid: Joi.string().required().label("Project Id is required"),
+      moduleid: Joi.string().required().label("Module Id is required"),
     });
 
     const result = Joi.validate(
