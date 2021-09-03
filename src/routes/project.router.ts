@@ -318,9 +318,8 @@ class projectManagement {
             })  
             newProjectQuestionaire.save((error:any,savedQuestionaire:any)=>{
               if(error){
-                console.log(error)
-                // winstonobj.logWihWinston({status:false,msg:"Failed to save project questionaire",error:JSON.stringify(error)},"projectmanagementservice")
-                // res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+                winstonobj.logWihWinston({status:false,msg:"Failed to save project questionaire",error:JSON.stringify(error)},"projectmanagementservice")
+                res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
               }else{
                 res.status(200).json({status:true,msg:"Saved"});
               }
@@ -355,7 +354,7 @@ class projectManagement {
     const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
 
       // create filters array
-      const filters: any = { isDeleted:false};
+      const filters: any = { isDeleted:false,ismandatory:false};
       if(req.body.where){
         req.body.where.title ? filters.title = req.body.where.title : '';
         req.body.where.description ? filters.description = req.body.where.description : '';
