@@ -98,14 +98,18 @@ class questionaireManagement {
   };
 
   adminGetAllSectors = async (req: Request, res: Response) => {
+    const limit = req.body.where ? undefined : req.body.limit ? req.body.limit: 10;
+    const offset = req.body.where ? undefined : 0 + ((req.body.page ? req.body.page : 1) - 1) * limit;
+    const where = req.body.where ? {...req.body.where,isDeleted:false} : {isDeleted:false};
     try { 
-       sectorModel.findAll({
-        where:{isDeleted:false},
+       sectorModel.findAndCountAll({
+        where:where,
         attributes:[
           "id",
           "title",
           "description",
-          "isActive"
+          "isActive",
+          "createdAt"
         ],
         order: [["createdAt", "DESC"]],
         include:[
@@ -120,7 +124,9 @@ class questionaireManagement {
             ]
           }
         ],
-        raw:true
+        offset: offset,
+        limit: limit,
+        // raw:true
       }).then((roles:any) => {
         res.status(200).json({status:true,data:roles});
       }).catch((error:Error) => {
