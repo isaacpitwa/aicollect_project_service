@@ -168,6 +168,30 @@ class validatorClass {
     });
   }
 
+  editSector = (req:Request,res:Response,next:NextFunction) => {
+    const schema = Joi.object().keys({
+      sectorid: Joi.number().required().label("sector id is required"),
+      title : Joi.string().required().label("title  is required"),
+      description:Joi.string().required().label("Description is required"),
+    });
+
+    const result = Joi.validate(
+      {
+        sectorid:req.body.sectorid,
+        title:req.body.title,
+        description:req.body.description
+      },
+      schema
+    );
+    result
+    .then((result: any) => {
+      next();
+    })
+    .catch((err: any) => {
+      this.populateErrors.bind(this)(err, res);
+    });
+  }
+
   disableSector = (req:Request,res:Response,next:NextFunction) => {
     const schema = Joi.object().keys({
       sectorid : Joi.number().required().label("sectorid is required")

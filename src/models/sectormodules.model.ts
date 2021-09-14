@@ -67,6 +67,6 @@ const sectorModulesModel = sequelize.define(
 );
 
 sectorModulesModel.belongsTo(administratorModel, { as: "submittedby", foreignKey: "addedBy" });
-sectorModulesModel.belongsTo(sectorModel, { as: "sector", foreignKey: "sectorid" });
+sectorModulesModel.belongsTo(sectorModel, { as: "sectormodule", foreignKey: "sectorid" });
 
 export default sectorModulesModel;

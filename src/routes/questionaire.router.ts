@@ -34,6 +34,27 @@ class questionaireManagement {
     }
   };
 
+  editSector = async (req: Request, res: Response) => {
+    sectorModel
+    .findOne({ where: { id: parseInt(req.body.sectorid)} })
+    .then((sector: any) => {
+        if (sector) {
+            sector.update({title:req.body.title,description:req.body.description}).then((updatedrecord: Object) => {
+              res.status(200).json({status: true,msg: "Sector edited"});
+            })
+            .catch((error: Error) => {
+              winstonobj.logWihWinston({status: false,message: "Failed to edit sector",error: JSON.stringify(error)},"projectmanagementservice");
+              res.status(500).json({status: false,mesage: "Something went wrong, please try again later",});
+            });
+        }else{
+          res.status(200).json({status:false,msg:'Sector does not exist'});
+        }
+    }).catch ((error:Error) => {
+      winstonobj.logWihWinston({status:false,message:"Failed to edit sector",error:JSON.stringify(error)},"projectmanagementservice");
+      res.status(500).json({status:false,msg:'Something went wrong,please try again later'});
+    });
+};
+
   disableSector = async (req: Request, res: Response) => {
       sectorModel
       .findOne({ where: { id: parseInt(req.body.sectorid)} })
@@ -311,7 +332,7 @@ class questionaireManagement {
           {
             model:sectorModel,
             foreignKey: "sectorid",
-            as:"sector",
+            as:"sectormodule",
             attributes:[
               "id",
               "title"
@@ -325,6 +346,7 @@ class questionaireManagement {
         res.status(200).json({status: true,data});
       })
       .catch((error: Error) => {
+        console.log(error)
         winstonobj.logWihWinston({status: false,message: "Failed to get aggregated modules",error: JSON.stringify(error)},"projectmanagementservice");
         res.status(500).json({status: false,msg: "Something went wrong, please try again later",});
       });
@@ -405,7 +427,7 @@ class questionaireManagement {
           {
             model:sectorModulesModel,
             foreignKey: "moduleid",
-            as: "module",
+            as: "sectormodule",
             attributes: [
               "id",
               "modulename",
@@ -496,6 +518,7 @@ class questionaireManagement {
 
   routes(): void {
     this.router.post("/saveSector",auth.checkAuth,auth.nocClientCheck,validator.saveSector,this.saveSector);
+    this.router.post("/editSector",auth.checkAuth,auth.nocClientCheck,validator.editSector,this.editSector);
     this.router.post("/disableSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.disableSector);
     this.router.post("/deleteSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.deleteSector);
     this.router.post("/enableSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.enableSector);

@@ -2,6 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database.connect";
 import administratorModel from "./administrators.model";
 import questionaireModel from "./questionaires.model";
+import sectorModulesModel from "./sectormodules.model";
 
 
 interface sectorModel extends Model {
