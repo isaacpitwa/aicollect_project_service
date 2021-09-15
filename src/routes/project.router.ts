@@ -71,7 +71,7 @@ class projectManagement {
 
        //set pagination options
        const options = {page: req.body.page?req.body.page:1,limit: 10,collation: {locale: 'en'},sort:{createdAt:-1},
-       select: {_id:1,projectname:1,desscription:1,addedBy:1,createdAt:1}};
+       select: {_id:1,projectname:1,desscription:1,addedBy:1,createdAt:1,sector:1}};
 
        projectsModel.paginate(filters, options, (err:any, result:any) => {
            if(err){
