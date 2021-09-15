@@ -218,7 +218,7 @@ class validatorClass {
       moduledescription : Joi.string().required().label("Module description is required"),
       ismandatory : Joi.boolean().label("ismadantory should be true or false"),
       sectorid : Joi.number().required().label("Sector ID is required"),
-      type:Joi.string().required().valid("REG","INS").label("Type is required"),
+      type:Joi.string().required().valid("REG","INS","TRN").label("A valid tpe is required [REG,INS,TRN]"),
 
     });
 
