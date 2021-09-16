@@ -523,7 +523,7 @@ class questionaireManagement {
     this.router.post("/deleteSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.deleteSector);
     this.router.post("/enableSector",auth.checkAuth,auth.nocClientCheck,validator.disableSector,this.enableSector);
     this.router.post("/getAllSectors",auth.checkAuth,auth.nocClientCheck,this.adminGetAllSectors);
-    this.router.post("/clientGetAllSectors",auth.checkAuth,this.clientGetAllSectors);
+    this.router.post("/clientGetAllSectors",auth.checkAuth,this.clientGetAllSectors);//removed resitrictions
     this.router.post("/addSectorModules",auth.checkAuth,auth.nocClientCheck,validator.addSectorModules,this.addSectorModules);
     this.router.post("/editSectorModules",auth.checkAuth,auth.nocClientCheck,validator.editSectorModules,this.editSectorModules);
     this.router.post("/disableSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.disableSectorModules);
