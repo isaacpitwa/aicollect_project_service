@@ -352,6 +352,30 @@ class questionaireManagement {
       });
   };
 
+  getAllModules = async (req: Request, res: Response) => {
+    const limit = req.body.where ? undefined : req.body.limit ? req.body.limit: 10;
+    const offset = req.body.where ? undefined : 0 + ((req.body.page ? req.body.page : 1) - 1) * limit;
+    const where = req.body.where ? {...req.body.where,isDeleted:false} : {isDeleted:false};
+
+    await sectorModulesModel.findAll({
+        where: where,
+        order: [["createdAt", "DESC"]],
+        attributes: [
+          "id",
+          "modulename",
+          "moduledescription",
+        ],
+      })
+      .then((data: any) => {
+        res.status(200).json({status: true,data});
+      })
+      .catch((error: Error) => {
+        console.log(error)
+        winstonobj.logWihWinston({status: false,message: "Failed to get aggregated modules",error: JSON.stringify(error)},"projectmanagementservice");
+        res.status(500).json({status: false,msg: "Something went wrong, please try again later",});
+      });
+  };
+
   fetchAllTemplates = async (req: Request, res: Response) => {
     const where = req.body.where ? {...req.body.where,isDeleted:false} : {isDeleted:false};
 
@@ -552,6 +576,7 @@ class questionaireManagement {
     this.router.post("/enableSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.enableSectorModules);
     this.router.post("/deleteSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.deleteSectorModules);
     this.router.post("/fetchAllModules",auth.checkAuth,auth.nocClientCheck,this.fetchAllModules);
+    this.router.post("/getAllModules",auth.checkAuth,auth.nocClientCheck,this.getAllModules);
     this.router.post("/fetchAllTemplates",auth.checkAuth,this.fetchAllTemplates);
     this.router.post("/saveNewTemplate",auth.checkAuth,auth.nocClientCheck,validator.saveNewTemplate,this.saveNewTemplate);
     this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.nocClientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
