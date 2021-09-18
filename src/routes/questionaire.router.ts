@@ -352,6 +352,28 @@ class questionaireManagement {
       });
   };
 
+  fetchAllTemplates = async (req: Request, res: Response) => {
+    const where = req.body.where ? {...req.body.where,isDeleted:false} : {isDeleted:false};
+
+    await questionaireModel.findAll({
+        where: where,
+        order: [["createdAt", "DESC"]],
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "formschema",
+        ]
+      })
+      .then((data: any) => {
+        res.status(200).json({status: true,data});
+      })
+      .catch((error: Error) => {
+        winstonobj.logWihWinston({status: false,message: "Failed to get aggregated modules",error: JSON.stringify(error)},"projectmanagementservice");
+        res.status(500).json({status: false,msg: "Something went wrong, please try again later",});
+      });
+  };
+
   saveNewTemplate = async (req: Request, res: Response) => {
     try {
 
@@ -530,6 +552,7 @@ class questionaireManagement {
     this.router.post("/enableSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.enableSectorModules);
     this.router.post("/deleteSectorModules",auth.checkAuth,auth.nocClientCheck,validator.disableSectorModules,this.deleteSectorModules);
     this.router.post("/fetchAllModules",auth.checkAuth,auth.nocClientCheck,this.fetchAllModules);
+    this.router.post("/fetchAllTemplates",auth.checkAuth,this.fetchAllTemplates);
     this.router.post("/saveNewTemplate",auth.checkAuth,auth.nocClientCheck,validator.saveNewTemplate,this.saveNewTemplate);
     this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.nocClientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
     this.router.post("/deleteQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.deleteQuestionaireTemplate);
