@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue:null
     },
     formschema : {
-      type: DataTypes.STRING,
+      type: DataTypes.JSONB,
       defaultValue:null
     },
     isActive: {

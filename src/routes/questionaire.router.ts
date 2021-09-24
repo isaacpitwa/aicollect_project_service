@@ -199,6 +199,8 @@ class questionaireManagement {
       }else{
         res.status(500).json({status: false,message: "Failed to save sector Module"});
       }
+
+      
     }catch(error){
       console.log(error)
       winstonobj.logWihWinston({status:false,message:"Failed to add sector Module",error:JSON.stringify(error)},"projectmanagementservice");
@@ -378,7 +380,6 @@ class questionaireManagement {
 
   fetchAllTemplates = async (req: Request, res: Response) => {
     const where = req.body.where ? {...req.body.where,isDeleted:false} : {isDeleted:false};
-
     await questionaireModel.findAll({
         where: where,
         order: [["createdAt", "DESC"]],
@@ -408,7 +409,7 @@ class questionaireManagement {
           sectorid:req.body.sectorid,
           moduleid:req.body.moduleid,
           parentid:req.body.parentid,
-          formschema:JSON.stringify(req.body.formschema),
+          formschema:req.body.formschema,
           addedBy:req.body.requester.userid
         });
    
@@ -418,6 +419,36 @@ class questionaireManagement {
           res.status(500).json({status: false,message: "Failed to save questionaire"});
         }
     } catch (error) {
+      console.log(error)
+      winstonobj.logWihWinston({status:false,message:"Failed to save questionaire",error:JSON.stringify(error)},"projectmanagementservice");
+      res.status(500).json({status:false,msg:'Something went wrong,please try again later'});
+    }
+  };
+
+  editQuesitoinaire = async (req: Request, res: Response) => {
+    try {
+         
+      questionaireModel
+      .findOne({ where: { id: parseInt(req.body.id)} })
+      .then((template: any) => {
+          if (template) {
+            template.update({title:req.body.title,description:req.body.description,ismandatory:req.body.ismandatory,formschema:req.body.formschema}).then((updatedrecord: Object) => {
+                res.status(200).json({status: true,msg: "template edited"});
+              })
+              .catch((error: Error) => {
+                winstonobj.logWihWinston({status: false,message: "Failed to edit template",error: JSON.stringify(error)},"projectmanagementservice");
+                res.status(500).json({status: false,mesage: "Something went wrong, please try again later",});
+              });
+          }else{
+            res.status(200).json({status:false,msg:'Template does not exist'});
+          }
+      }).catch ((error:Error) => {
+        winstonobj.logWihWinston({status:false,message:"Failed to edit sector",error:JSON.stringify(error)},"projectmanagementservice");
+        res.status(500).json({status:false,msg:'Something went wrong,please try again later'});
+      });
+
+    } catch (error) {
+      console.log(error)
       winstonobj.logWihWinston({status:false,message:"Failed to save questionaire",error:JSON.stringify(error)},"projectmanagementservice");
       res.status(500).json({status:false,msg:'Something went wrong,please try again later'});
     }
@@ -489,6 +520,31 @@ class questionaireManagement {
       .catch((error: Error) => {
         console.log(error)
         winstonobj.logWihWinston({status: false,message: "Failed to get aggregated questionaire templates",error: JSON.stringify(error)},"projectmanagementservice");
+        res.status(500).json({status: false,msg: "Something went wrong, please try again later",});
+      });
+  }
+
+  getAQuestionareTemplate = async (req:Request,res:Response) => {
+    const where = req.body.where ? {...req.body.where,isDeleted:false} : {isDeleted:false};
+    await questionaireModel.findOne({
+        where: where,
+        order: [["createdAt", "DESC"]],
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "ismandatory",
+          "formschema",
+          "isDeleted",
+          "isActive",
+          "createdAt",
+        ],
+      })
+      .then((data: any) => {
+        res.status(200).json({status: true,data});
+      })
+      .catch((error: Error) => {
+        winstonobj.logWihWinston({status: false,message: "Failed to get questionaire template",error: JSON.stringify(error)},"projectmanagementservice");
         res.status(500).json({status: false,msg: "Something went wrong, please try again later",});
       });
   }
@@ -579,7 +635,9 @@ class questionaireManagement {
     this.router.post("/getAllModules",auth.checkAuth,auth.nocClientCheck,this.getAllModules);
     this.router.post("/fetchAllTemplates",auth.checkAuth,this.fetchAllTemplates);
     this.router.post("/saveNewTemplate",auth.checkAuth,auth.nocClientCheck,validator.saveNewTemplate,this.saveNewTemplate);
+    this.router.post("/editQuesitoinaire",auth.checkAuth,auth.nocClientCheck,validator.editQuesitoinaire,this.editQuesitoinaire);
     this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.nocClientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
+    this.router.post("/getAQuestionareTemplate",auth.checkAuth,auth.nocClientCheck,validator.getAQuestionareTemplate,this.getAQuestionareTemplate);
     this.router.post("/deleteQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.deleteQuestionaireTemplate);
     this.router.post("/disablQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.disablQuestionaireTemplate);
     this.router.post("/activeQuestionaireTemplate",auth.checkAuth,auth.nocClientCheck,validator.deleteQuestionaireTemplate,this.activeQuestionaireTemplate);
@@ -589,3 +647,4 @@ class questionaireManagement {
 const questionaireManagementObj = new questionaireManagement();
 questionaireManagementObj.routes();
 export default questionaireManagementObj.router;
+// code

@@ -36,7 +36,7 @@ const questionaireModel = sequelize.define(
       defaultValue:null
     },
     formschema:{
-      type: DataTypes.STRING
+      type: DataTypes.JSONB
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,

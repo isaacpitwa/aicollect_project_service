@@ -383,6 +383,26 @@ class validatorClass {
     });
   }
 
+  getAQuestionareTemplate = (req:Request,res:Response,next:NextFunction) => {
+    const schema = Joi.object().keys({
+      id: Joi.number().required().label("A valild Questionaire id is required"),
+    });
+
+    const result = Joi.validate(
+      {
+        id:req.body.where ? req.body.where.id ? req.body.where.id : undefined:undefined ,
+      },
+      schema
+    );
+    result
+    .then((result: any) => {
+      next();
+    })
+    .catch((err: any) => {
+      this.populateErrors.bind(this)(err, res);
+    });
+  }
+
   deleteQuestionaireTemplate = (req:Request,res:Response,next:NextFunction) => {
     const schema = Joi.object().keys({
       questionaireid: Joi.number().required().label("Questionaire Id is required"),
