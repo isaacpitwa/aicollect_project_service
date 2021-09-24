@@ -58,13 +58,13 @@ class Server {
   startServer(): void {
     try {
       db.sequelize.sync().then(()=>{
-        this.app.listen(this.app.get("port"), () => {
+        // this.app.listen(this.app.get("port"), () => {
           winstonobj.logWihWinston(
             { status: true, msg: `Server started on port ${Config.PORT}` },
             "SuccessLogs"
           );
         });
-      });
+      // });
        
     } catch (error) {
       winstonobj.logWihWinston(
