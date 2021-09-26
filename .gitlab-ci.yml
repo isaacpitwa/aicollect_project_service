@@ -23,6 +23,8 @@ before_script:
 
 build:
   stage: build
+  tags:
+    - docker
   script:
     - docker-compose -f docker-compose.ci.yml build
     - docker push $IMAGE:latest
