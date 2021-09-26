@@ -77,4 +77,3 @@ class Server {
 
 export const serverObj = new Server();
 export const app = new Server().app;
-// #str
