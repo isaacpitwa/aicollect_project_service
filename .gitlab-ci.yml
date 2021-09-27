@@ -23,16 +23,12 @@ before_script:
 
 build:
   stage: build
-  tags:
-    - backend
   script:
     - docker-compose -f docker-compose.ci.yml build
     - docker push $IMAGE:latest
 
 deploy_to_test:
   stage: deploy
-  tags:
-    - backend
   only:
     - develop
   script:
