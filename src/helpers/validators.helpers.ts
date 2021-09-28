@@ -451,7 +451,7 @@ class validatorClass {
       ismandatory: Joi.boolean().optional().label("Is mandatory should be true or false"),
       formschema: Joi.array().required().label("Form JSON is required"),
     });
-
+    // corrected
     const result = Joi.validate(
       {
         questionaireid:req.body.questionaireid,
