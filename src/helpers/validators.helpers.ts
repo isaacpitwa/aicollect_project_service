@@ -445,14 +445,20 @@ class validatorClass {
 
   editQuesitoinaire = (req:Request,res:Response,next:NextFunction) => {
     const schema = Joi.object().keys({
-      questionaireid: Joi.string().required().label("Questionaire Id is required"),
-      formjson: Joi.array().required().label("Form JSON is required"),
+      title: Joi.string().required().label("Questionaire title is required"),
+      questionaireid: Joi.number().required().label("Questionaire Id is required"),
+      description: Joi.string().required().label("Description is required"),
+      ismandatory: Joi.boolean().optional().label("Is mandatory should be true or false"),
+      formschema: Joi.array().required().label("Form JSON is required"),
     });
 
     const result = Joi.validate(
       {
         questionaireid:req.body.questionaireid,
-        formjson:req.body.formjson,
+        title:req.body.title,
+        description:req.body.description,
+        ismandatory:req.body.ismandatory,
+        formschema:req.body.formschema,
       },
       schema
     );
