@@ -513,6 +513,28 @@ class validatorClass {
     });
   }
 
+  getMandatoryProjectQuestionaires  = (req:Request,res:Response,next:NextFunction) => {
+    const schema = Joi.object().keys({
+      projectid: Joi.string().required().label("Project Id is required"),
+      moduleid: Joi.string().label("Module Id is required"),
+    });
+
+    const result = Joi.validate(
+      {
+        projectid:req.body.where ? req.body.where.projectid : undefined,
+        moduleid:req.body.where ? req.body.where.moduleid: undefined ,
+      },
+      schema
+    );
+    result
+    .then((result: any) => {
+      next();
+    })
+    .catch((err: any) => {
+      this.populateErrors.bind(this)(err, res);
+    });
+  }
+
 
   populateErrors = (err: any, res: Response) => {
     const errors = err.details.map((err: any, index: Number) => {

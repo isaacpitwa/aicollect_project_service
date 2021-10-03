@@ -4,6 +4,8 @@ const questionaireschema = {
     _id:1,
     createdAt:1,
     isDeleted:1,
+    isActive:1,
+    addedBy:1,
     questionaires:{
         _id:1,
         formjson:1,
@@ -57,10 +59,57 @@ const filterQuestionairesWithModules = function (and:any) {
     ];
 }
 
+const filterMandatoryQuestionairesWithModules = function (and:any) {
+    return [
+        {
+            $match: { 
+                projectid : ObjectId(and[0].projectid),
+                moduleid :  ObjectId(and[0].moduleid) ,
+                ismandatory: true
+            }
+        },
+        {
+            $lookup:{
+                from:"questionaires",
+                localField:'questionaireid',
+                foreignField:"_id",
+                as:"questionaires"
+            }
+        },
+        {
+            $project:questionaireschema
+        },
+    ];
+}
+
+const filterMandatoryQuestionaires = function (and:any) {
+    return [
+        {
+            $match: { 
+                projectid : ObjectId(and[0].projectid),
+                ismandatory: true
+            }
+        },
+        {
+            $lookup:{
+                from:"questionaires",
+                localField:'questionaireid',
+                foreignField:"_id",
+                as:"questionaires"
+            }
+        },
+        {
+            $project:questionaireschema
+        },
+    ];
+}
+
 
 const aggregations =  {
     filterQuestionaires:filterQuestionaires,
-    filterQuestionairesWithModules:filterQuestionairesWithModules
+    filterQuestionairesWithModules:filterQuestionairesWithModules,
+    filterMandatoryQuestionairesWithModules:filterMandatoryQuestionairesWithModules,
+    filterMandatoryQuestionaires:filterMandatoryQuestionaires
 }
 
 export default aggregations;

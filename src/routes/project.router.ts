@@ -522,6 +522,25 @@ class projectManagement {
     })
   }
 
+  getMandatoryProjectQuestionaires = async (req:Request,res:Response) => {
+    const connection = getDatabaseConnection(req.body.requester.store);
+    const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
+    const options = {page: req.body.page?req.body.page:1,limit:10,collation: {locale: 'en'},sort:{_id:-1}};
+    
+    let myAggregate = ""
+    req.body.where.moduleid ? 
+    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterMandatoryQuestionairesWithModules(req.body.where)):
+    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterMandatoryQuestionaires([req.body.where]));
+    projectQuestionaireModel.aggregatePaginate(myAggregate, options, (error: any, results: any)=> {
+        if(error){
+          winstonobj.logWihWinston({status:false,msg:"Failed to get project questionaires",error:JSON.stringify(error)},"projectmanagementservice")
+          res.status(500).json({status:false,msg:"Something went wrong, Please try again later"});
+        }else{
+            res.status(200).json({status:true,msg:"List populated",data:results});
+        }
+    })
+  }
+
   getAllProjectQuestionairesNP = async (req:Request,res:Response) => {
     const connection = getDatabaseConnection(req.body.requester.store);
     const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
@@ -583,11 +602,10 @@ class projectManagement {
     this.router.post("/saveModuleQuestionaire",auth.checkAuth,auth.clientCheck,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
     this.router.post("/deleteQuestionaire",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.deleteQuestionaire);
     this.router.post("/editQuesitoinaire",auth.checkAuth,auth.clientCheck,validator.editQuesitoinaire,this.editQuesitoinaire);
-    // this.router.post("/getQuesitoinaireLatestVersion",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.getQuesitoinaireLatestVersion);
     this.router.post("/getAllQuestionaires",auth.checkAuth,auth.clientCheck,this.getAllQuestionaires);
     this.router.post("/getAllProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
+    this.router.post("/getMandatoryProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getMandatoryProjectQuestionaires,this.getMandatoryProjectQuestionaires);
     this.router.post("/getAllProjectQuestionairesNP",auth.checkAuth,auth.clientCheck,validator.getProjectTeam,this.getAllProjectQuestionairesNP);
-    
     this.router.post("/getProjectProfile",auth.checkAuth,auth.clientCheck,validator.getProjectProfile,this.getProjectProfile);
   }
 }
