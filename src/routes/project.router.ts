@@ -205,7 +205,7 @@ class projectManagement {
 
       //set pagination options
       const options = {page: req.body.page?req.body.page:1,limit: 10,collation: {locale: 'en'},sort:{createdAt:-1},
-      select: {_id:1,names:1,role:1,createdAt:1}};
+      select: {_id:1,names:1,userid:1,role:1,createdAt:1}};
 
       projcetTeamsModel.paginate(filters, options, (err:any, result:any) => {
           if(err){
@@ -213,6 +213,24 @@ class projectManagement {
               res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
           }else{
               res.status(200).json({status:true,msg:"project fetched",data:result});
+          }
+      });
+      }
+  }
+
+  getAllProjectTeam = (req:Request,res:Response) => {
+    if(!ObjectId.isValid(req.body.projectid)){
+      res.status(400).json({status:false,msg:"Invalid project ID"});
+    }else{
+      const connection = getDatabaseConnection(req.body.requester.store);
+      const projcetTeamsModel = connection.models['projectteams'] || connection.model("projectteams", mongooseschemas.projectteamsschema);
+
+      projcetTeamsModel.find({projectid:ObjectId(req.body.projectid)},{userid:1,names:1,role:1}, (err:any, result:any) => {
+          if(err){
+                winstonobj.logWihWinston({status:false,msg:"Failed to get all projects",error:JSON.stringify(err)},"projectmanagementservice")
+              res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+          }else{
+              res.status(200).json({status:true,msg:"success",data:result});
           }
       });
       }
@@ -490,7 +508,10 @@ class projectManagement {
     const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
     const options = {page: req.body.page?req.body.page:1,limit:10,collation: {locale: 'en'},sort:{_id:-1}};
     
-    const myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionaires([req.body.where]));
+    let myAggregate = ""
+    req.body.where.moduleid ? 
+    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionairesWithModules(req.body.where)):
+    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionaires([req.body.where]));
     projectQuestionaireModel.aggregatePaginate(myAggregate, options, (error: any, results: any)=> {
         if(error){
           winstonobj.logWihWinston({status:false,msg:"Failed to get project questionaires",error:JSON.stringify(error)},"projectmanagementservice")
@@ -501,6 +522,54 @@ class projectManagement {
     })
   }
 
+  getAllProjectQuestionairesNP = async (req:Request,res:Response) => {
+    const connection = getDatabaseConnection(req.body.requester.store);
+    const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
+    
+    
+    projectQuestionaireModel.aggregate([
+      {
+          $match:{
+            $and:[
+              { "projectid":ObjectId(req.body.projectid)},
+              {isDeleted:false},
+              {ismandatory:false}
+            ]
+        }
+      },{
+        $lookup:{
+          from: "questionaires", 
+          localField: "questionaireid", 
+          foreignField: "_id",
+          as: "questionaire"
+        }
+      },{
+        $project:{
+          questionaireid:1,
+          questionaire:{
+            title:1,
+            formjson:1
+          }
+        }
+      }
+    ],(error: any, results: any)=> {
+        if(error){
+          winstonobj.logWihWinston({status:false,msg:"Failed to get project questionaires",error:JSON.stringify(error)},"projectmanagementservice")
+          res.status(500).json({status:false,msg:"Something went wrong, Please try again later"});
+        }else{
+            res.status(200).json({status:true,msg:"List populated",data:results});
+        }
+    })
+    // projectQuestionaireModel.find(where,(error: any, results: any)=> {
+    //     if(error){
+    //       winstonobj.logWihWinston({status:false,msg:"Failed to get project questionaires",error:JSON.stringify(error)},"projectmanagementservice")
+    //       res.status(500).json({status:false,msg:"Something went wrong, Please try again later"});
+    //     }else{
+    //         res.status(200).json({status:true,msg:"List populated",data:results});
+    //     }
+    // })
+  }
+
   routes(): void {
     this.router.post("/saveNewProject",auth.checkAuth,auth.clientCheck,validator.saveNewProject,this.saveNewProject);
     this.router.post("/fetchAllProjects",auth.checkAuth,auth.clientCheck,this.fetchAllProjects);
@@ -508,6 +577,7 @@ class projectManagement {
     this.router.post("/editProject",auth.checkAuth,auth.clientCheck,validator.editProject,this.editProject);
     this.router.post("/addTeamMember",auth.checkAuth,auth.clientCheck,validator.addTeamMember,this.addTeamMember);
     this.router.post("/getProjectTeam",auth.checkAuth,auth.clientCheck,validator.getProjectTeam,this.getProjectTeam);
+    this.router.post("/getAllProjectTeam",auth.checkAuth,auth.clientCheck,validator.getProjectTeam,this.getAllProjectTeam);
     this.router.post("/removeUserFromProjectTeam",auth.checkAuth,auth.clientCheck,validator.removeUserFromProjectTeam,this.removeUserFromProjectTeam);
     this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.clientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
     this.router.post("/saveModuleQuestionaire",auth.checkAuth,auth.clientCheck,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
@@ -516,6 +586,8 @@ class projectManagement {
     // this.router.post("/getQuesitoinaireLatestVersion",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.getQuesitoinaireLatestVersion);
     this.router.post("/getAllQuestionaires",auth.checkAuth,auth.clientCheck,this.getAllQuestionaires);
     this.router.post("/getAllProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
+    this.router.post("/getAllProjectQuestionairesNP",auth.checkAuth,auth.clientCheck,validator.getProjectTeam,this.getAllProjectQuestionairesNP);
+    
     this.router.post("/getProjectProfile",auth.checkAuth,auth.clientCheck,validator.getProjectProfile,this.getProjectProfile);
   }
 }

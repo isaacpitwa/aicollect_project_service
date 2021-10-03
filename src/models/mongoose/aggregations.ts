@@ -18,8 +18,29 @@ const filterQuestionaires = function (and:any) {
     return [
         {
             $match: { 
-                projectid : and[0].projectid ? ObjectId(and[0].projectid):undefined,
-                moduleid : and[0].moduleid ? ObjectId(and[0].moduleid) : undefined,
+                projectid : ObjectId(and[0].projectid),
+            }
+        },
+        {
+            $lookup:{
+                from:"questionaires",
+                localField:'questionaireid',
+                foreignField:"_id",
+                as:"questionaires"
+            }
+        },
+        {
+            $project:questionaireschema
+        },
+    ];
+}
+
+const filterQuestionairesWithModules = function (and:any) {
+    return [
+        {
+            $match: { 
+                projectid : ObjectId(and[0].projectid),
+                moduleid :  ObjectId(and[0].moduleid) ,
             }
         },
         {
@@ -38,7 +59,8 @@ const filterQuestionaires = function (and:any) {
 
 
 const aggregations =  {
-    filterQuestionaires:filterQuestionaires
+    filterQuestionaires:filterQuestionaires,
+    filterQuestionairesWithModules:filterQuestionairesWithModules
 }
 
 export default aggregations;
