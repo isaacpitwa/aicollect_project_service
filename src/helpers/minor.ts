@@ -92,7 +92,7 @@ class minor {
       }],
       nested:true
     }).then((modules:any) => {
-      
+
       modules.forEach(element => {
           element = element.dataValues; 
           const connection = getDatabaseConnection(requester.store);
@@ -111,27 +111,28 @@ class minor {
               winstonobj.logWihWinston({status:false,message:"Failed to save auto assign single module",error:JSON.stringify(error)},"ProjectManagementLogs");
             }else{
               element.questionaires.forEach((questionaire)=> {
-                questionaire.dataValues['formjson'] = JSON.parse(questionaire.dataValues['formschema'])
-                this.saveAutoAssingedQuestionaire(requester.store,questionaire.dataValues,project,assigned._id);
+                this.saveAutoAssingedQuestionaire(requester.store,questionaire.dataValues,project,assigned._id,questionaire.dataValues.tag,element.type);
               });
             }
           });
       });
-
     }).catch((error:Error) => {
         winstonobj.logWihWinston({status:false,message:"Failed to find auto assign modules",error:JSON.stringify(error)},"PorjectManagementLogs");
     });
   } 
 
-  saveAutoAssingedQuestionaire = (store:string,data:any,project:any,moduleid:string) => {
+  saveAutoAssingedQuestionaire = (store:string,data:any,project:any,moduleid:string,tag:string,type:string) => {
     try {
+          // console.log(data.formschema[0])
           const connection = getDatabaseConnection(store);
           const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
 
           const newQuestionaire = new QuestionaireModel({
-            title: data.title,
-            description: data.description,
-            formjson:data.formjson,
+            title: data.formschema[0].title,
+            description: data.formschema[0].description,
+            tag:tag,
+            type:type,
+            formjson:data.formschema[0].fields,
             addedBy: {userid:1,name:"AiCollect BOT"},
             ismandatory:true,
             postgresparentid:null,
@@ -142,7 +143,7 @@ class minor {
             if(error){
               winstonobj.logWihWinston({status:false,msg:"Failed to save auto questionaire",error:JSON.stringify(error)},"projectmanagementservice")
             }else{
-              this.saveProjectQuestionaire(project,moduleid,saved._id,store);
+              this.saveProjectQuestionaire(project,moduleid,saved._id,store,tag,type);
               winstonobj.logWihWinston({status:true,msg:"saved auto questionaire"},"projectmanagementservice")
             }
           });
@@ -151,12 +152,14 @@ class minor {
     }
   }
 
-  saveProjectQuestionaire = (projectid:string,moduleid:string,questionaireid:string,store:string) => {
+  saveProjectQuestionaire = (projectid:string,moduleid:string,questionaireid:string,store:string,tag:string,type:String) => {
     const connection = getDatabaseConnection(store);
     const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
     const newProjectQuestionaire = new projectQuestionaireModel({
       projectid: ObjectId(projectid),
       moduleid: ObjectId(moduleid),
+      type:type,
+      tag:tag,
       questionaireid: ObjectId(questionaireid),
       addedBy: {userid:1,name:"AiCollect BOT"},
       ismandatory:true

@@ -387,6 +387,7 @@ class questionaireManagement {
           "id",
           "title",
           "description",
+          "tag",
           "formschema",
         ]
       })
@@ -401,7 +402,6 @@ class questionaireManagement {
 
   saveNewTemplate = async (req: Request, res: Response) => {
     try {
-
         const questionaire = await questionaireModel.create({
           title: req.body.title,
           description:req.body.description,
@@ -409,12 +409,13 @@ class questionaireManagement {
           sectorid:req.body.sectorid,
           moduleid:req.body.moduleid,
           parentid:req.body.parentid,
+          tag:req.body.tag,
           formschema:req.body.formschema,
           addedBy:req.body.requester.userid
         });
    
         if (questionaire instanceof questionaireModel) {
-          res.status(200).json({status: true,message: "Questionaire Added"});
+          res.status(200).json({status: true,message: "Section Added"});
         }else{
           res.status(500).json({status: false,message: "Failed to save questionaire"});
         }
@@ -429,10 +430,10 @@ class questionaireManagement {
     try {
          
       questionaireModel
-      .findOne({ where: { id: parseInt(req.body.id)} })
+      .findOne({ where: { id: parseInt(req.body.questionaireid)} })
       .then((template: any) => {
           if (template) {
-            template.update({title:req.body.title,description:req.body.description,ismandatory:req.body.ismandatory,formschema:req.body.formschema}).then((updatedrecord: Object) => {
+            template.update({title:req.body.title,description:req.body.description,ismandatory:req.body.ismandatory,formschema:req.body.formschema,tag:req.body.tag}).then((updatedrecord: Object) => {
                 res.status(200).json({status: true,msg: "template edited"});
               })
               .catch((error: Error) => {
@@ -466,6 +467,7 @@ class questionaireManagement {
           "title",
           "description",
           "ismandatory",
+          "tag",
           "formschema",
           "isDeleted",
           "isActive",
@@ -533,6 +535,7 @@ class questionaireManagement {
           "id",
           "title",
           "description",
+          "tag",
           "ismandatory",
           "formschema",
           "isDeleted",

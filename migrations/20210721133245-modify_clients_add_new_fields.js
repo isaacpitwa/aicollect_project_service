@@ -3,26 +3,11 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(
-        'clients', // table name
-        'billingid', // new field name
-        {
-          defaultValue: 1,
-        },
-      ),
       queryInterface.addColumn(
-        'clients',
-        'no_of_users',
+        'sectormodules',
+        'tag',
         {
-          type: Sequelize.INTEGER,
-          allowNull: true,
-        },
-      ),
-      queryInterface.addColumn(
-        'clients',
-        'no_of_projects',
-        {
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING,
           allowNull: true,
         },
       ),
@@ -37,9 +22,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('clients', 'billingid'),
-      queryInterface.removeColumn('clients', 'no_of_sources'),
-      queryInterface.removeColumn('clients', 'no_of_projects'),
+      queryInterface.removeColumn('sectormodules', 'tag'),
     ]);
     /**
      * Add reverting commands here.

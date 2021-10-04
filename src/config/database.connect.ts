@@ -10,9 +10,9 @@ export const sequelize = new Sequelize(psqldb, psqluser, psqlpass, {
   host: psqlurl,
   port: psqlport,
   dialect: "postgres", //describes what library to use
-  logging: (sql: any, queryObject: any) => {
-    winstonobj.logWihWinston({level:"psql failure",sql, queryObject},'ErrorLogs')
-  },
+  // logging: (sql: any, queryObject: any) => {
+  //   winstonobj.logWihWinston({level:"psql failure",sql, queryObject},'ErrorLogs')
+  // },
   operatorsAliases,
 });
 

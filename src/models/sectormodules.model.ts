@@ -32,6 +32,9 @@ const sectorModulesModel = sequelize.define(
     type: {
       type: DataTypes.STRING,
     },
+    tag: {
+      type: DataTypes.STRING,
+    },
     sectorid: {
       type: DataTypes.NUMBER,
     },

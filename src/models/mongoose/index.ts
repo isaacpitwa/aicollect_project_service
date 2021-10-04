@@ -64,7 +64,9 @@ const projectquestionairesschema = new Schema({
   questionaireid: {type:Schema.Types.ObjectId,require:true},
   ismandatory: {type:Schema.Types.Boolean,default:false},
   addedBy:  userschema,
-  isDeleted: {type:Boolean,default:false}
+  isDeleted: {type:Boolean,default:false},
+  type: {type:String},
+  tag: {type:String,default:false},
 },
 {timestamps:true});
 projectquestionairesschema.plugin(mongoosePaginate);
@@ -82,6 +84,8 @@ const questionairesschema = new Schema({
   version: {type:Schema.Types.String,default:'V.1'},
   isDeleted: {type:Boolean,default:false},
   isActive: {type:Boolean,default:true},
+  type: {type:String},
+  tag: {type:String,default:false},
 },
 {timestamps:true});
 questionairesschema.plugin(mongoosePaginate);

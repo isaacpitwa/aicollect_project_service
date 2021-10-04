@@ -20,6 +20,9 @@ const questionaireModel = sequelize.define(
     description: {
       type: DataTypes.STRING,
     },
+    tag: {
+      type: DataTypes.STRING,
+    },
     ismandatory : {
       type: DataTypes.BOOLEAN,
       defaultValue:0

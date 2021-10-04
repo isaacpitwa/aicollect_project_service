@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     type: {
         type: DataTypes.STRING,
     },
+    tag: {
+      type: DataTypes.STRING,
+    },
     sectorid:{
         type:DataTypes.INTEGER
     },

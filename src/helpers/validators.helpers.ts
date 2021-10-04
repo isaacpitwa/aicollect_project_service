@@ -296,6 +296,7 @@ class validatorClass {
       ismandatory: Joi.boolean().required().label("Is mandatory should be true or false"),
       sectorid: Joi.number().required().label("Sectorid is required"),
       moduleid: Joi.number().optional().label("Module ID should be a number"),
+      tag:Joi.string().required().label("A tag is requried"),
       parentid: Joi.number().optional().label("Parent questionaire ID should be a number"),
       formschema: Joi.array().required().label("Form schema is required")
     });
@@ -304,6 +305,7 @@ class validatorClass {
       {
         title:req.body.title,
         description:req.body.description,
+        tag:req.body.tag,
         ismandatory:req.body.ismandatory,
         sectorid:req.body.sectorid,
         moduleid:req.body.moduleid ? req.body.moduleid :undefined, 
@@ -448,6 +450,7 @@ class validatorClass {
       title: Joi.string().required().label("Questionaire title is required"),
       questionaireid: Joi.number().required().label("Questionaire Id is required"),
       description: Joi.string().required().label("Description is required"),
+      tag: Joi.string().required().label("Tag is required"),
       ismandatory: Joi.boolean().optional().label("Is mandatory should be true or false"),
       formschema: Joi.array().required().label("Form JSON is required"),
     });
@@ -456,6 +459,7 @@ class validatorClass {
       {
         questionaireid:req.body.questionaireid,
         title:req.body.title,
+        tag:req.body.tag,
         description:req.body.description,
         ismandatory:req.body.ismandatory,
         formschema:req.body.formschema,
