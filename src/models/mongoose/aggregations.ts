@@ -83,6 +83,7 @@ const filterMandatoryQuestionairesWithModules = function (and:any) {
 }
 
 const filterMandatoryQuestionaires = function (and:any) {
+    console.log(and)
     return [
         {
             $match: { 

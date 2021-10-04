@@ -529,7 +529,7 @@ class projectManagement {
     
     let myAggregate = ""
     req.body.where.moduleid ? 
-    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterMandatoryQuestionairesWithModules(req.body.where)):
+    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterMandatoryQuestionairesWithModules([req.body.where])):
     myAggregate = projectQuestionaireModel.aggregate(aggregations.filterMandatoryQuestionaires([req.body.where]));
     projectQuestionaireModel.aggregatePaginate(myAggregate, options, (error: any, results: any)=> {
         if(error){
