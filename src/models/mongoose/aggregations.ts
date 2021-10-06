@@ -6,10 +6,12 @@ const questionaireschema = {
     isDeleted:1,
     isActive:1,
     addedBy:1,
+    
     questionaires:{
         _id:1,
         formjson:1,
-        title:1
+        title:1,
+        description:1
     }
 }
 
