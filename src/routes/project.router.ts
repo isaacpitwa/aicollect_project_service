@@ -91,7 +91,7 @@ class projectManagement {
         const connection = getDatabaseConnection(req.body.requester.store);
         const projectsModel = connection.models['projects'] || connection.model("projects", mongooseschemas.projectschema);
 
-        projectsModel.findOneAndUpdate({_id:ObjectId(req.body.projectid)},{$set:{isdelete:true}},{ returnNewDocument: true })
+        projectsModel.findOneAndUpdate({_id:ObjectId(req.body.projectid)},{$set:{isDeleted:true}},{ returnNewDocument: true })
         .then((document:any) => {
           if(document) {
             res.status(200).json({status:true,msg:`Project deleted`});
