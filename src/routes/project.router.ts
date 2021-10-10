@@ -387,7 +387,6 @@ class projectManagement {
               : '';
           }
       }
-      console.log(filters)
       //set pagination options
       const options = {page: req.body.page?req.body.page:1,limit: 10,collation: {locale: 'en'},sort:{createdAt:-1},
       select: {_id:1,title:1,description:1,postgresparentid:1,mongodbparentid:1,formjson:1,addedBy:1,createdAt:1,isActive:1}};
@@ -508,9 +507,10 @@ class projectManagement {
     const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
     const options = {page: req.body.page?req.body.page:1,limit:10,collation: {locale: 'en'},sort:{_id:-1}};
     
+    console.log(req.body)
     let myAggregate = ""
     req.body.where.moduleid ? 
-    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionairesWithModules(req.body.where)):
+    myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionairesWithModules([req.body.where])):
     myAggregate = projectQuestionaireModel.aggregate(aggregations.filterQuestionaires([req.body.where]));
     projectQuestionaireModel.aggregatePaginate(myAggregate, options, (error: any, results: any)=> {
         if(error){
@@ -544,7 +544,6 @@ class projectManagement {
   getAllProjectQuestionairesNP = async (req:Request,res:Response) => {
     const connection = getDatabaseConnection(req.body.requester.store);
     const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
-    
     
     projectQuestionaireModel.aggregate([
       {

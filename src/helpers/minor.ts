@@ -123,16 +123,16 @@ class minor {
 
   saveAutoAssingedQuestionaire = (store:string,data:any,project:any,moduleid:string,tag:string,type:string) => {
     try {
-          // console.log(data.formschema[0])
+          // console.log(data)
           const connection = getDatabaseConnection(store);
           const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
 
           const newQuestionaire = new QuestionaireModel({
-            title: data.formschema[0].title,
-            description: data.formschema[0].description,
+            title: data.title,
+            description: data.description,
             tag:tag,
             type:type,
-            formjson:data.formschema[0].fields,
+            formjson:data.formschema,
             addedBy: {userid:1,name:"AiCollect BOT"},
             ismandatory:true,
             postgresparentid:null,

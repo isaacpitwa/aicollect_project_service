@@ -6,23 +6,23 @@ const questionaireschema = {
     isDeleted:1,
     isActive:1,
     addedBy:1,
-    
+    tag:1,
     questionaires:{
         _id:1,
         formjson:1,
         title:1,
-        description:1
+        description:1,
     }
 }
 
 
 //completed jobs
 const filterQuestionaires = function (and:any) {
-    console.log(ObjectId(and[0].projectid))
     return [
         {
             $match: { 
                 projectid : ObjectId(and[0].projectid),
+                ismandatory : false
             }
         },
         {
@@ -45,6 +45,7 @@ const filterQuestionairesWithModules = function (and:any) {
             $match: { 
                 projectid : ObjectId(and[0].projectid),
                 moduleid :  ObjectId(and[0].moduleid) ,
+                ismandatory : false
             }
         },
         {
