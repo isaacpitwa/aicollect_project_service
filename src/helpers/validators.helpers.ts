@@ -453,7 +453,7 @@ class validatorClass {
       description: Joi.string().required().label("Description is required"),
       formjson: Joi.array().required().label("Form JSON is required"),
     });
-    // corrected
+  
     const result = Joi.validate(
       {
         questionaireid:req.body.questionaireid,
