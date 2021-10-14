@@ -445,6 +445,34 @@ class validatorClass {
     });
   }
 
+  editClientQuesitoinaire = (req:Request,res:Response,next:NextFunction) => {
+    const schema = Joi.object().keys({
+      title: Joi.string().required().label("Questionaire title is required"),
+      questionaireid: Joi.string().required().label("A valid Id is required"),
+      projectqtnid: Joi.string().required().label("A valid Id is required"),
+      description: Joi.string().required().label("Description is required"),
+      formjson: Joi.array().required().label("Form JSON is required"),
+    });
+    // corrected
+    const result = Joi.validate(
+      {
+        questionaireid:req.body.questionaireid,
+        projectqtnid:req.body.projectqtnid,
+        title:req.body.title,
+        description:req.body.description,
+        formjson:req.body.formjson,
+      },
+      schema
+    );
+    result
+    .then((result: any) => {
+      next();
+    })
+    .catch((err: any) => {
+      this.populateErrors.bind(this)(err, res);
+    });
+  }
+
   editQuesitoinaire = (req:Request,res:Response,next:NextFunction) => {
     const schema = Joi.object().keys({
       title: Joi.string().required().label("Questionaire title is required"),

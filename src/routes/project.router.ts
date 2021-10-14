@@ -356,12 +356,25 @@ class projectManagement {
     }else{
       const connection = getDatabaseConnection(req.body.requester.store);
       const QuestionaireModel = connection.models['questionaires'] || connection.model("questionaires", mongooseschemas.questionairesschema);
-      QuestionaireModel.findOneAndUpdate({_id:ObjectId(req.body.questionaireid)},{formjson:req.body.formjson},(error:any,questionaire:any) => {
+      QuestionaireModel.findOneAndUpdate({_id:ObjectId(req.body.questionaireid)},{
+                                        title:req.body.title,
+                                        description:req.body.desctioption,
+                                        formjson:req.body.formjson},
+      (error:any,questionaire:any) => {
         if(error){
           winstonobj.logWihWinston({status:false,msg:"Failed to edit questionaire",error:JSON.stringify(error)},"projectmanagementservice")
           res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
         }else{
-          res.status(200).json({status:true,msg:"New version saved"});
+          const projectQuestionaireModel = connection.models['projectquestionaires'] || connection.model("projectquestionaires", mongooseschemas.projectquestionairesschema);
+          projectQuestionaireModel.findOneAndUpdate({_id:ObjectId(req.body.projectqtnid)},{title:req.body.title,description:req.body.desctioption},
+          (error:any,questionaire:any) => {
+            if(error){
+              winstonobj.logWihWinston({status:false,msg:"Failed to edit questionaire",error:JSON.stringify(error)},"projectmanagementservice")
+              res.status(500).json({status:false,msg:"Something went wrong,please try again later"});
+            }else{
+              res.status(200).json({status:true,msg:"New version saved"});
+            }
+          });
         }
       });
     } 
@@ -600,7 +613,7 @@ class projectManagement {
     this.router.post("/getQuestionareTemplates",auth.checkAuth,auth.clientCheck,validator.getQuestionareTemplates,this.getQuestionareTemplates);
     this.router.post("/saveModuleQuestionaire",auth.checkAuth,auth.clientCheck,validator.clientSaveNewTemplate,this.saveModuleQuesitoinaire);
     this.router.post("/deleteQuestionaire",auth.checkAuth,auth.clientCheck,validator.deleteQuestionaire,this.deleteQuestionaire);
-    this.router.post("/editQuesitoinaire",auth.checkAuth,auth.clientCheck,validator.editQuesitoinaire,this.editQuesitoinaire);
+    this.router.post("/editQuesitoinaire",auth.checkAuth,auth.clientCheck,validator.editClientQuesitoinaire,this.editQuesitoinaire);
     this.router.post("/getAllQuestionaires",auth.checkAuth,auth.clientCheck,this.getAllQuestionaires);
     this.router.post("/getAllProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getAllProjectQuestionaires,this.getAllProjectQuestionaires);
     this.router.post("/getMandatoryProjectQuestionaires",auth.checkAuth,auth.clientCheck,validator.getMandatoryProjectQuestionaires,this.getMandatoryProjectQuestionaires);
