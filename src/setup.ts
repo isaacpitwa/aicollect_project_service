@@ -28,7 +28,7 @@ class Server {
           res.header("Access-Control-Allow-Credentials", "true");
           next();
         });
-      this.app.use(express.json({ limit: '500kb' })); // Body limit is 10
+      // this.app.use(express.json({ limit: '500kb' })); // Body limit is 10
       this.app.use(
         (err: any, req: Request, res: Response, next: NextFunction) => {
           if (err.status === 400) {
