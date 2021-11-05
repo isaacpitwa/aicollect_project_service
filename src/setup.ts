@@ -40,7 +40,7 @@ class Server {
               .status(err.status)
               .send({ status: false, message: "Invalid JSON body" });
           }
-          return next(err); // if it's not a 400, let the default error handling do it.
+          return next(err);
         }
       );
       this.app.use(express.json({ limit: '50mb' }));
