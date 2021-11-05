@@ -34,7 +34,7 @@ class Server {
           if (err.status === 400) {
             winstonobj.logWihWinston(
               { status: false, message: "Invalid request body", data: req.body },
-              "ErrorLogs"
+              "ErrorLogs" 
             );
             return res
               .status(err.status)
@@ -43,8 +43,8 @@ class Server {
           return next(err); // if it's not a 400, let the default error handling do it.
         }
       );
-      this.app.use(express.json());
-      this.app.use(express.urlencoded({extended: false}));
+      this.app.use(express.json({ limit: '50mb' }));
+      this.app.use(express.urlencoded({limit: '50mb', extended: false, parameterLimit: 50000 }));
       this.app.use(xss());
       this.app.use(passport.initialize());
       this.app.use(passport.session());
