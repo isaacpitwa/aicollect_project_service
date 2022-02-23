@@ -13,4 +13,4 @@ RUN npm audit fix
 COPY . ./
 RUN gulp build
 CMD ["npm","start"]
-EXPOSE 4005
+EXPOSE 4000

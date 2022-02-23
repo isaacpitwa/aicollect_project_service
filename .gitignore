@@ -1,5 +1,13 @@
+.idea
 .vscode
 node_modules/
 /.env
 secrets/
 build/
+
+# nyc test coverage
+.nyc_output
+
+# coverage folder
+coverage
+
