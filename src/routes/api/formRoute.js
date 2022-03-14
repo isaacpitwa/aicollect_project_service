@@ -1,17 +1,17 @@
 import express from 'express';
-import SectorController from '../../controllers/sectorController';
-import verify from '../../middleware/auth';
+import FormController from '../../controllers/formController';
+// import verify from '../../middleware/auth';
 import method from '../../utils/method';
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(SectorController.getSectors)
+  .get(FormController.getForms)
   .all(method);
 router
   .route('/create')
-  .post(verify, SectorController.createSector)
+  .post(FormController.createForm)
   .all(method);
 
 export default router;

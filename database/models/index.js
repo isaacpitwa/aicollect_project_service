@@ -1,37 +1,63 @@
-'use strict';
+import { Schema, model } from 'mongoose';
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
-const db = {};
-
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
-
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+const userschema = new Schema({
+  userId: { type: Number, required: true },
+  name: { type: String, trim: true },
+  roles: { type: String, required: true }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+const sectorschema = new Schema({
+  id: { type: Number, trim: true },
+  title: { type: String, required: true }
+});
 
-module.exports = db;
+const projectschema = new Schema({
+  projectname: { type: String, required: true },
+  description: { type: String },
+  createdBy: userschema,
+  isDeleted: { type: Boolean, default: false },
+  projectTeam: { type: Array, default: [] }
+}, { timestamps: true });
+
+const formSchema = new Schema({
+  name: { type: String, required: true },
+  version: { type: Number, required: true },
+  createdBy: userschema,
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  status: { type: Boolean, required: true },
+  formFields: { type: Array, default: [] }
+});
+
+const responseSchema = new Schema({
+  form: formSchema,
+  submittedBy: userschema,
+  submittedOn: { type: Date },
+  timeSpentToSubmit: { type: Date },
+  gps: { type: Object },
+  answer: { type: Array }
+});
+
+const moduleschema = new Schema({
+  id: { type: Number, trim: true },
+  type: { type: String, required: true },
+  moduleName: { type: String, required: true }
+});
+
+const userModel = model('User', userschema);
+const sectorModel = model('Sector', sectorschema);
+const projectModel = model('Project', projectschema);
+const moduleModel = model('Module', moduleschema);
+const formModel = model('Questionaire', formSchema);
+const responseModel = model('Response', responseSchema);
+
+const mongooseModels = {
+  userModel,
+  sectorModel,
+  projectModel,
+  moduleModel,
+  formModel,
+  responseModel
+};
+
+export default mongooseModels;

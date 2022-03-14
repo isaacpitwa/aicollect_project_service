@@ -1,11 +1,11 @@
 import express from 'express';
-import usersRouter from './usersRoute';
-import profileRouter from './profileRoute';
+import projectRouter from './projectRoute';
+import formRouter from './formRoute';
 
 const router = express.Router();
 
-router.use('/authService', usersRouter);
-router.use('/profiles', profileRouter);
+router.use('/projectService', projectRouter);
+router.use('/forms', formRouter);
 
 router.use((err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') {
@@ -14,7 +14,6 @@ router.use((err, req, res, next) => {
       errors: 'Server can\'t handle the request currently'
     });
   }
-  console.log(err);
   return next(err);
 });
 
