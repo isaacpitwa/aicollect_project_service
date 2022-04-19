@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import methodOveride from 'method-override';
 import session from 'express-session';
 import mongoose from 'mongoose';
+import passport from 'passport';
+
+import './config/passport';
 // import redis from 'redis';
 
 import routes from './routes';
@@ -19,17 +22,40 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const MONGO_URI = `mongodb://${process.env.MONGO_URL}:${process.env.MONGO_PORT}/${process.env.MONGO_COLLECTION}`;
+app.use(session({
+  store: '',
+  secret: 'secret',
+  saveUninitialized: true,
+  resave: true,
+  cookie: { secure: false }
+}));
 
-const mongoConfigObject = {
-  user: process.env.MONGO_USER,
-  pass: process.env.MONGO_PASS,
-  keepAlive: true,
-  keepAliveInitialDelay: 300000,
-  useNewUrlParser: true,
-  // useCreateIndex: true,
-  useUnifiedTopology: true
-};
+app.use(passport.initialize());
+app.use(passport.session());
+
+let MONGO_URI;
+let mongoConfigObject;
+
+if (process.env.NODE_ENV === 'production') {
+  MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@aicollect.1flh1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+  mongoConfigObject = {
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASS,
+    keepAlive: true,
+    keepAliveInitialDelay: 300000,
+    useNewUrlParser: true,
+    // useCreateIndex: true,
+    useUnifiedTopology: true
+  };
+} else {
+  MONGO_URI = 'mongodb://localhost:27017/aicollect';
+  mongoConfigObject = {
+    keepAlive: true,
+    keepAliveInitialDelay: 300000,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  };
+}
 
 mongoose.connect(MONGO_URI, mongoConfigObject);
 mongoose.connection.on('connected', () => {

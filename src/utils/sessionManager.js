@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken';
 import redis from 'redis';
 import { promisify } from 'util';
 
-import SessionService from '../services/SessionService';
-
 const host = 'localhost';
 const port = 6379;
 const redisClient = redis.createClient(port, host);
@@ -23,49 +21,6 @@ redisClient
 
 /** Class representing the session manager */
 class SessionManager {
-  /**
-   * Generates session token
-   * @param {object} data user details
-   * @returns {string} token
-   */
-  static generateToken(data) {
-    // console.log(data);
-    const token = jwt.sign({
-      id: data.id,
-      firstname: data.firstname,
-      lastname: data.lastname,
-      roles: data.roles,
-      email: data.email,
-      isActive: data.isActive
-    },
-    data.secret || process.env.JWT_SECRET,
-    { expiresIn: '1hr' });
-    return token;
-  }
-
-  /**
-   * Creates a redis session
-   * @param {object} data User data
-   * @returns {string} Returns a session token
-   */
-  static async createRedisSession(data) {
-    await this.verifyToken(data.email);
-    const token = this.generateToken(data);
-    const sessionInfo = {
-      UserId: data.id,
-      usertoken: token,
-      isActive: true,
-      deviceToken: data.deviceToken
-    };
-    // Save session in database
-    const session = await SessionService.createSession(sessionInfo);
-    // console.log(session);
-    // save session in redis client
-    // console.log(session.dataValues.id);
-    redisClient.set(data.email, session.dataValues.usertoken);
-    return token;
-  }
-
   /**
    * Checks of token is true
    * @param {string} email user email
