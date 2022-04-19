@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import mongooseModels from '../../database/models';
 import Response from '../utils/response';
+import { redisClient } from '../utils/sessionManager';
 
 const { projectModel } = mongooseModels;
 
@@ -72,8 +73,22 @@ class ProjectController {
       if (!req.body.clientId) {
         return Response.badRequestError(res, 'Please provide a valid user id');
       }
-      const projects = await mongooseModels.projectModel.find({ projectOwner: req.body.clientId });
-      return Response.customResponse(res, 200, 'Projects retrieved successfully', projects);
+      // Check for products from Redis server before hitting up the server
+      redisClient.get('projects', async (err, projects) => {
+        console.log(projects);
+        console.log(err);
+        if (err) {
+          return Response.badRequestError(res, 'Error occured when connecting to redis server');
+        }
+        if (projects) {
+          return Response.customResponse(res, 200, 'Projects retreved from cache', JSON.parse(projects));
+        }
+        const projectsFromDB = await mongooseModels.projectModel.find({
+          projectOwner: req.body.clientId
+        });
+        redisClient.setex('projects', 1440, JSON.stringify(projectsFromDB));
+        return Response.customResponse(res, 200, 'Projects retrieved successfully', projectsFromDB);
+      });
     } catch (error) {
       return next(error);
     }

@@ -5,7 +5,7 @@ import { promisify } from 'util';
 
 const host = 'localhost';
 const port = 6379;
-const redisClient = redis.createClient(port, host);
+export const redisClient = redis.createClient(port, host);
 
 const getAsync = promisify(redisClient.get).bind(redisClient);
 const delAsync = promisify(redisClient.del).bind(redisClient);
