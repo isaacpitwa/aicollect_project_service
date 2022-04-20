@@ -26,7 +26,7 @@ build_and_push:
     - cat $STAGING_ENVIROMENT_FILE > .env_temp
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
-    - docker build -t $REGISTRY:staging -t  $REGISTRY:staging_latest .
+    - docker build -t "${REGISTRY}:staging" -t  "${REGISTRY}:staging_latest" .
     - docker push $REGISTRY
 
 #5 
@@ -58,7 +58,7 @@ build_and_push_production:
     - main
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
-    - docker build -t $REGISTRY:production -t  $REGISTRY:prod_latest .
+    - docker build -t "${REGISTRY}:production" -t  "${REGISTRY}:prod_latest" .
     - docker push $REGISTRY
 
 #7
