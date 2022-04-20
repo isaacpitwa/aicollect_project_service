@@ -1,16 +1,13 @@
-FROM node:12.19.0-alpine
-RUN  apk add --update --no-cache g++ make curl jq py3-configobj py3-pip py3-setuptools python3 python3-dev
+FROM node:16-alpine
+WORKDIR /usr/src/app
+COPY package.json yarn.lock ./
+RUN yarn --frozen-lockfile
 
-RUN ["mkdir", "-p", "/logs/"]
-COPY package*.json ./
-COPY gulpfile.js ./
+ADD .env_temp .
+# Copy source files into the image
+COPY . .
+COPY /.env_temp ./.env
 
-RUN mkdir -p ~/secrets
-RUN npm install  node-gyp gulp -g
-RUN npm install
-RUN npm audit fix
-
-COPY . ./
-RUN gulp build
-CMD ["npm","start"]
 EXPOSE 4000
+
+CMD yarn start
