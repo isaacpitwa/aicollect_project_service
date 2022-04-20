@@ -15,13 +15,14 @@ class ResponseController {
    */
   static async createResponse(req, res, next) {
     try {
+      // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
+      // UPLOAD PRESET ==> aicollect_field_responses
       const response = new responseModel({
         _id: mongoose.Types.ObjectId(),
         ...req.body
       });
       response.save((err, saved) => {
         if (err) {
-          console.log(err);
           return Response.badRequestError(res, 'Please check that all the fields are right');
         }
         return Response.customResponse(res, 201, 'Response submited successfully', saved);

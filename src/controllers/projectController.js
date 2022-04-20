@@ -73,10 +73,8 @@ class ProjectController {
       if (!req.body.clientId) {
         return Response.badRequestError(res, 'Please provide a valid user id');
       }
-      // Check for products from Redis server before hitting up the server
+      // Check for projects from Redis server before hitting up the server
       redisClient.get('projects', async (err, projects) => {
-        console.log(projects);
-        console.log(err);
         if (err) {
           return Response.badRequestError(res, 'Error occured when connecting to redis server');
         }
@@ -136,11 +134,28 @@ class ProjectController {
   static async getProjectDetails(req, res, next) {
     try {
       const projectId = req.params.id;
-      const project = await mongooseModels.projectModel.findOne({ _id: projectId });
-      if (!project) {
-        return Response.notFoundError(res, 'Project was either deleted or does not exist');
-      }
-      return Response.customResponse(res, 200, 'Project details retrieved', project);
+      // check for project from Redis server before dialing up the server
+      redisClient.get('projectId', async (err, project) => {
+        if (err) {
+          return Response.badRequestError(res, 'Error occured when connecting to redis server');
+        }
+        if (project) {
+          return Response.customResponse(
+            res,
+            200,
+            'Project details retreieved from cache',
+            JSON.parse(project)
+          );
+        }
+        // dial up server
+        const projectFromDB = await mongooseModels.projectModel.findOne({ _id: projectId });
+        if (!projectFromDB) {
+          return Response.notFoundError(res, 'Project was either deleted or does not exist');
+        }
+        // eslint-disable-next-line no-underscore-dangle
+        redisClient.setex('projectId', 1440, JSON.stringify(projectFromDB));
+        return Response.customResponse(res, 200, 'Project details retrieved', projectFromDB);
+      });
     } catch (error) {
       return next(error);
     }
