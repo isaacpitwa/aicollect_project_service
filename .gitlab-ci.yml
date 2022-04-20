@@ -5,6 +5,7 @@ services:
 stages:
   - build_and_push
   - deploy_staging
+  - build_and_push_production
   - deploy_production
 
 #2
