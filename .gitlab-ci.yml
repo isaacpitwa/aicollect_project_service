@@ -28,7 +28,7 @@ build_and_push:
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
     - docker build -t "${REGISTRY}:staging" -t  "${REGISTRY}:staging_latest" .
-    - docker push $REGISTRY:staging
+    - docker push $STAGING_IMAGE_NAME
 
 #5 
 
@@ -60,7 +60,7 @@ build_and_push_production:
   script:
     - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
     - docker build -t "${REGISTRY}:production" -t  "${REGISTRY}:prod_latest" .
-    - docker push $REGISTRY:production
+    - docker push $PRODUCTION_IMAGE_NAME
 
 #7
 deploy_production:
