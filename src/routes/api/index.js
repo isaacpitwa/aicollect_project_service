@@ -6,9 +6,9 @@ import taskRouter from './taskRoute';
 const router = express.Router();
 
 // Register Routes to app
-router.use('/projectService', projectRouter);
-router.use('/forms', formRouter);
-router.use('/tasks', taskRouter);
+router.use('', projectRouter);
+router.use('forms', formRouter);
+router.use('tasks', taskRouter);
 
 router.use((err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') {
