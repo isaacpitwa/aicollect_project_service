@@ -1,14 +1,12 @@
 import express from 'express';
 import projectRouter from './projectRoute';
-import formRouter from './formRoute';
-import taskRouter from './taskRoute';
+// import formRouter from './formRoute';
+// import taskRouter from './taskRoute';
 
 const router = express.Router();
 
 // Register Routes to app
 router.use('', projectRouter);
-router.use('forms', formRouter);
-router.use('tasks', taskRouter);
 
 router.use((err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') {
