@@ -1,9 +1,8 @@
-**Typescript postgres sequelize template**
 
 **REstfull API**
 
 ### What is this repository for?
-Manages all user related functionality
+Manages all user authentication related functionality
 
 ## Installation
 

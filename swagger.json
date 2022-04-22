@@ -1,0 +1,60 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2.0.0",
+    "description": "AICollect Data collection tool Authentication Service",
+    "title": "AiCollect",
+    "contact": {
+      "name": "Rockside Consults",
+      "email": "rocksideconsults@gmail.com"
+    }
+  },
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "user",
+      "descriptions": "User Endpoints"
+    },
+    {
+      "name": "notifications",
+      "descriptions": "Notifications Endpoints"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/authService/signup": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Add new user",
+        "operationId": "addUser",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "422": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  }
+}
