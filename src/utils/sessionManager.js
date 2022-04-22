@@ -3,10 +3,25 @@ import jwt from 'jsonwebtoken';
 import redis from 'redis';
 import { promisify } from 'util';
 
-const host = 'localhost';
-const port = 6379;
-export const redisClient = redis.createClient(port, host);
+require('dotenv').config();
 
+const {
+  REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, NODE_ENV
+} = process.env;
+
+let redisClient;
+if (NODE_ENV === 'production') {
+  redisClient = redis.createClient({
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    password: REDIS_PASSWORD || null
+  });
+} else {
+  redisClient = redis.createClient({
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+  });
+}
 const getAsync = promisify(redisClient.get).bind(redisClient);
 const delAsync = promisify(redisClient.del).bind(redisClient);
 
