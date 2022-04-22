@@ -1,0 +1,82 @@
+image: docker:latest
+
+services:
+  - docker:dind
+stages:
+  - build_and_push
+  - deploy_staging
+  - build_and_push_production
+  - deploy_production
+
+#2
+variables:
+  REGISTRY: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service" 
+  STAGING_IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service:staging"
+  PRODUCTION_IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service:production"
+
+
+# before_script:
+#   - npm test
+
+#4
+build_and_push:
+  stage: build_and_push
+  # only:
+  #   - develop
+  before_script:  
+    - cat $STAGING_ENVIROMENT_FILE > .env_temp
+  script:
+    - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
+    - docker build -t "${REGISTRY}:staging" -t  "${REGISTRY}:staging_latest" .
+    - docker push $STAGING_IMAGE_NAME
+
+#5 
+
+deploy_staging:
+  stage: deploy_staging
+  # tags: 
+  #   - Deployment
+  #   - Staging
+  # only:
+  #   - develop
+  script:
+    - chmod og= $SSHKEY
+    - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker  container stop aic_backendProjects || true && docker container  rm aic_backendProjects || true"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker pull  $STAGING_IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker run -d -p 8004:4000 --restart always  --name aic_backendProjects  $STAGING_IMAGE_NAME"
+  environment:
+    name: staging 
+    url: https://testprojects-api.aicollectapp.com
+
+#6
+build_and_push_production:
+  stage: build_and_push_production
+  before_script:  
+    - cat $PRODUCTION_ENVIROMENT_FILE > .env.example_temp
+  only:
+    - main
+  script:
+    - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
+    - docker build -t "${REGISTRY}:production" -t  "${REGISTRY}:prod_latest" .
+    - docker push $PRODUCTION_IMAGE_NAME
+
+#7
+deploy_production:
+  stage: deploy_production
+  # tags: 
+  #   - Deployment
+  #   - Production
+  only:
+    - main
+  script:
+    - chmod og= $SSHKEY
+    - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker container stop aic_backendProjects || true && docker container rm aic_backendProjects || true"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker pull  $PRODUCTION_IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$PRODUCTION_SERVER_HOST "docker run -d -p 8004:4000 --restart always  --name aic_backendProjects  $PRODUCTION_IMAGE_NAME"
+  environment:
+    name: Production 
+    url: https://projects-api.aicollectapp.com
