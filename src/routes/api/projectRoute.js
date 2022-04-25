@@ -10,11 +10,11 @@ const router = express.Router();
 
 /** PROJECT ROUTES */
 router
-  .route('/create')
+  .route('/projects/create')
   .post(verify, ProjectController.createProject)
   .all(method);
 router
-  .route('/addTeamMember')
+  .route('/projects/addTeamMember')
   .post(verify, ProjectController.addMembersToProject)
   .all(method);
 router
@@ -22,7 +22,7 @@ router
   .get(verify, ProjectController.getProjects)
   .all(method);
 router
-  .route('/userProjects')
+  .route('/projects/userProjects')
   .post(verify, ProjectController.getUserProjects)
   .all(method);
 router
@@ -40,19 +40,19 @@ router
   .get(TaskController.getTasks)
   .all(method);
 router
-  .route('/create')
+  .route('/tasks/create')
   .post(TaskController.createTask)
   .all(method);
 router
-  .route('/user')
+  .route('/tasks/user')
   .post(TaskController.getUserTasks)
   .all(method);
 router
-  .route('/project')
+  .route('/tasks/project')
   .post(TaskController.getProjectTasks)
   .all(method);
 router
-  .route('/:taskId')
+  .route('/tasks/:taskId')
   .get(TaskController.getTaskDetails)
   .all(method);
 
@@ -62,27 +62,27 @@ router
   .get(FormController.getForms)
   .all(method);
 router
-  .route('/getClientForms')
+  .route('/forms/getClientForms')
   .post(FormController.getUserForms)
   .all(method);
 router
-  .route('/getModuleForms')
+  .route('/forms/getModuleForms')
   .post(FormController.getUserFormsForSpecificModule)
   .all(method);
 router
-  .route('/update')
+  .route('/forms/update')
   .post(FormController.updateForm)
   .all(method);
 router
-  .route('/:formId')
+  .route('/forms/:formId')
   .get(FormController.getFormDetails)
   .all(method);
 router
-  .route('/create/newForm')
+  .route('/forms/create/newForm')
   .post(FormController.createForm)
   .all(method);
 router
-  .route('/submit/new-response')
+  .route('/forms/submit/new-response')
   .post(ResponseController.createResponse)
   .all(method);
 
