@@ -22,6 +22,7 @@ if (NODE_ENV === 'production') {
     port: REDIS_PORT,
   });
 }
+
 const getAsync = promisify(redisClient.get).bind(redisClient);
 const delAsync = promisify(redisClient.del).bind(redisClient);
 
@@ -34,6 +35,7 @@ redisClient
     console.log(error);
   });
 
+export const redisConnection = redisClient;
 /** Class representing the session manager */
 class SessionManager {
   /**
@@ -79,5 +81,4 @@ class SessionManager {
     return jwt.verify(token, process.env.JWT_SECRET);
   }
 }
-
 export default SessionManager;

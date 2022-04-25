@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import mongooseModels from '../../database/models';
 import Response from '../utils/response';
-import { redisClient } from '../utils/sessionManager';
+import { redisConnection } from '../utils/sessionManager';
 
 const { projectModel } = mongooseModels;
 
@@ -74,7 +74,7 @@ class ProjectController {
         return Response.badRequestError(res, 'Please provide a valid user id');
       }
       // Check for projects from Redis server before hitting up the server
-      redisClient.get('projects', async (err, projects) => {
+      redisConnection.get('projects', async (err, projects) => {
         if (err) {
           return Response.badRequestError(res, 'Error occured when connecting to redis server');
         }
@@ -84,7 +84,7 @@ class ProjectController {
         const projectsFromDB = await mongooseModels.projectModel.find({
           projectOwner: req.body.clientId
         });
-        redisClient.setex('projects', 1440, JSON.stringify(projectsFromDB));
+        redisConnection.setex('projects', 1440, JSON.stringify(projectsFromDB));
         return Response.customResponse(res, 200, 'Projects retrieved successfully', projectsFromDB);
       });
     } catch (error) {
@@ -135,7 +135,7 @@ class ProjectController {
     try {
       const projectId = req.params.id;
       // check for project from Redis server before dialing up the server
-      redisClient.get('projectId', async (err, project) => {
+      redisConnection.get('projectId', async (err, project) => {
         if (err) {
           return Response.badRequestError(res, 'Error occured when connecting to redis server');
         }
@@ -153,7 +153,7 @@ class ProjectController {
           return Response.notFoundError(res, 'Project was either deleted or does not exist');
         }
         // eslint-disable-next-line no-underscore-dangle
-        redisClient.setex('projectId', 1440, JSON.stringify(projectFromDB));
+        redisConnection.setex('projectId', 1440, JSON.stringify(projectFromDB));
         return Response.customResponse(res, 200, 'Project details retrieved', projectFromDB);
       });
     } catch (error) {
