@@ -59,31 +59,31 @@ router
 /** FORM / RESPONSE ROUTES */
 router
   .route('/forms')
-  .get(FormController.getForms)
+  .get(verify, FormController.getForms)
   .all(method);
 router
   .route('/forms/getClientForms')
-  .post(FormController.getUserForms)
+  .post(verify, FormController.getUserForms)
   .all(method);
 router
   .route('/forms/getModuleForms')
-  .post(FormController.getUserFormsForSpecificModule)
+  .post(verify, FormController.getUserFormsForSpecificModule)
   .all(method);
 router
   .route('/forms/update')
-  .post(FormController.updateForm)
+  .post(verify, FormController.updateForm)
   .all(method);
 router
   .route('/forms/:formId')
-  .get(FormController.getFormDetails)
+  .get(verify, FormController.getFormDetails)
   .all(method);
 router
   .route('/forms/create/newForm')
-  .post(FormController.createForm)
+  .post(verify, FormController.createForm)
   .all(method);
 router
   .route('/forms/submit/new-response')
-  .post(ResponseController.createResponse)
+  .post(verify, ResponseController.createResponse)
   .all(method);
 
 export default router;
