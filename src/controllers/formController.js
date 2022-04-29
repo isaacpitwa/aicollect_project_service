@@ -103,7 +103,10 @@ class FormController {
       if (!projectId) {
         return Response.badRequestError(res, 'projectId was not provided');
       }
-      formModel.find({ clientId, projectId }, (err, data) => {
+      if (!module) {
+        return Response.badRequestError(res, 'Module name was not provided');
+      }
+      formModel.find({ clientId, projectId, module }, (err, data) => {
         if (err) {
           console.log(err);
           return Response.badRequestError(res, err.message);
