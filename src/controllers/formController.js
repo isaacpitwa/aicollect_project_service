@@ -106,8 +106,15 @@ class FormController {
       if (!module) {
         return Response.badRequestError(res, 'Module name was not provided');
       }
-      const forms = await formModel.find({ clientId, projectId, module }).exec();
-      return Response.customResponse(res, 200, 'Module Forms retreived successfully', forms);
+      formModel.find({ clientId, projectId, module }, (err, data) => {
+        if (err) {
+          console.log(err);
+          return Response.badRequestError(res, err.message);
+        }
+        return Response.customResponse(res, 200, 'Forms retrieved successfully', data);
+      });
+      // const forms = await formModel.find({ clientId, projectId, module }).exec();
+      // return Response.customResponse(res, 200, 'Module Forms retreived successfully', forms);
     } catch (error) {
       return next(error);
     }
