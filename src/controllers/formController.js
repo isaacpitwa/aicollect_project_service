@@ -95,7 +95,7 @@ class FormController {
   static async getUserFormsForSpecificModule(req, res, next) {
     try {
       const { formModel } = mongooseModels;
-      const { clientId, projectId, module } = req.body;
+      const { clientId, projectId } = req.body;
       console.log(req.body);
       if (!clientId) {
         return Response.badRequestError(res, 'CliendId was not provided');
@@ -103,10 +103,7 @@ class FormController {
       if (!projectId) {
         return Response.badRequestError(res, 'projectId was not provided');
       }
-      if (!module) {
-        return Response.badRequestError(res, 'Module name was not provided');
-      }
-      formModel.find({ clientId, projectId, module }, (err, data) => {
+      formModel.find({ clientId, projectId }, (err, data) => {
         if (err) {
           console.log(err);
           return Response.badRequestError(res, err.message);
