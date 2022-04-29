@@ -96,7 +96,7 @@ class FormController {
     try {
       const { formModel } = mongooseModels;
       const { clientId, projectId } = req.body;
-      console.log(req.body);
+      console.log('Module is here: ', req.body.module);
       if (!clientId) {
         return Response.badRequestError(res, 'CliendId was not provided');
       }
@@ -106,15 +106,8 @@ class FormController {
       if (!module) {
         return Response.badRequestError(res, 'Module name was not provided');
       }
-      formModel.find({ clientId, projectId, module }, (err, data) => {
-        if (err) {
-          console.log(err);
-          return Response.badRequestError(res, err.message);
-        }
-        return Response.customResponse(res, 200, 'Forms retrieved successfully', data);
-      });
-      // const forms = await formModel.find({ clientId, projectId, module }).exec();
-      // return Response.customResponse(res, 200, 'Module Forms retreived successfully', forms);
+      const forms = await formModel.find({ clientId, projectId, module }).exec();
+      return Response.customResponse(res, 200, 'Module Forms retreived successfully', forms);
     } catch (error) {
       return next(error);
     }
