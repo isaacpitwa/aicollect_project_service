@@ -18,7 +18,7 @@ const projectschema = new Schema({
   createdBy: userschema,
   isDeleted: { type: Boolean, default: false },
   projectTeam: { type: Array, default: [] },
-  projectOwner: { type: String, default: [] }
+  projectOwner: { type: String, default: [] },
 }, { timestamps: true });
 
 const formSchema = new Schema({
