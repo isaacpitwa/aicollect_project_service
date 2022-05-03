@@ -1,16 +1,19 @@
 import { Schema, model, Types } from 'mongoose';
 
+/** Users, cloned from the Authentication Service */
 const userschema = new Schema({
   userId: { type: Number, required: true },
   name: { type: String, trim: true },
   roles: { type: String, required: true }
 });
 
+/** Sectors created by Super Admin User (Users register under a specific sector) */
 const sectorschema = new Schema({
   id: { type: Number, trim: true },
   title: { type: String, required: true }
 });
 
+/** Projects created by Clients (Users) */
 const projectschema = new Schema({
   _id: Types.ObjectId,
   projectname: { type: String, required: true },
@@ -21,6 +24,7 @@ const projectschema = new Schema({
   projectOwner: { type: String, default: [] },
 }, { timestamps: true });
 
+/** Questionaires Created by the CLients */
 const formSchema = new Schema({
   name: { type: String, required: true },
   version: { type: Number, required: true },
@@ -35,6 +39,21 @@ const formSchema = new Schema({
   formFields: { type: Array, default: [] },
 });
 
+/** Questionaire Templates created by the SuperAdmin */
+const templateSchema = new Schema({
+  name: { type: String, required: true },
+  version: { type: Number, required: true },
+  regions: { type: Array, required: true, default: [] },
+  createdBy: userschema,
+  projectId: { type: String, required: false },
+  module: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  status: { type: Boolean, required: true, default: false },
+  formFields: { type: Array, default: [] },
+});
+
+/** Responses submitted against the questionaires */
 const responseSchema = new Schema({
   form: { type: String, required: true },
   submittedBy: userschema,
@@ -44,12 +63,14 @@ const responseSchema = new Schema({
   answers: { type: Array, required: true }
 });
 
+/** Modules created Under a sector (For example Registration Module) */
 const moduleschema = new Schema({
   id: { type: Number, trim: true },
   type: { type: String, required: true },
   moduleName: { type: String, required: true }
 });
 
+/** Tasks created under a project */
 const taskSchema = new Schema({
   _id: Types.ObjectId,
   title: { type: String, required: true },
@@ -76,6 +97,7 @@ const moduleModel = model('Module', moduleschema);
 const formModel = model('Questionaire', formSchema);
 const responseModel = model('Response', responseSchema);
 const taskModel = model('Task', taskSchema);
+const templateModel = model('Template', templateSchema);
 
 const mongooseModels = {
   userModel,
@@ -84,7 +106,8 @@ const mongooseModels = {
   moduleModel,
   formModel,
   responseModel,
-  taskModel
+  taskModel,
+  templateModel
 };
 
 export default mongooseModels;
