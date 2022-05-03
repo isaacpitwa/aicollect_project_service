@@ -31,6 +31,23 @@ class ResponseController {
       next(error);
     }
   }
+
+  /**
+   * @description Gets User Responses
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {Function} next Express Next Function
+   * @returns {object} Response from get responses
+   */
+  static async getUserResponses(req, res, next) {
+    try {
+      const { formId } = req.params;
+      const responses = await responseModel.find({ formId });
+      return Response.customResponse(res, 200, 'Responses retreived', responses);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default ResponseController;

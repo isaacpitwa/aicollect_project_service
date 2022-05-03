@@ -32,7 +32,7 @@ const formSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   status: { type: Boolean, required: true, default: false },
-  formFields: { type: Array, default: [] }
+  formFields: { type: Array, default: [] },
 });
 
 const responseSchema = new Schema({

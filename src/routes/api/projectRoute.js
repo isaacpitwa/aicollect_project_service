@@ -82,6 +82,10 @@ router
   .post(verify, FormController.createForm)
   .all(method);
 router
+  .route('/forms/responses/:formId')
+  .get(verify, ResponseController.getUserResponses)
+  .all(method);
+router
   .route('/forms/submit/new-response')
   .post(verify, ResponseController.createResponse)
   .all(method);
