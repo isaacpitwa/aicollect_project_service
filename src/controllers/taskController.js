@@ -74,7 +74,9 @@ class TaskController {
       const user = {
         userId, name, role: roles
       };
-      const tasks = await taskModel.find({ team: { $in: user } });
+      const tasks = await taskModel.find({
+        $and: [{ 'team.userId': user.userId }]
+      });
       return Response.customResponse(res, 200, 'User tasks retrieved successfully', tasks);
     } catch (error) {
       return next(error);
