@@ -1,8 +1,9 @@
+/* eslint-disable no-plusplus */
 import mongoose from 'mongoose';
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
-const { taskModel } = mongooseModels;
+const { taskModel, formModel } = mongooseModels;
 
 /** class representing Task Controller */
 class TaskController {
@@ -77,7 +78,26 @@ class TaskController {
       const tasks = await taskModel.find({
         $and: [{ 'team.userId': user.userId }]
       });
-      return Response.customResponse(res, 200, 'User tasks retrieved successfully', tasks);
+      // List of Questionaires
+      const list = [];
+      for (let i = 0; i < tasks.length; i++) {
+        tasks[i].questionaire.forEach(async (form) => {
+          list.push(form);
+        });
+      }
+      // Find all questionaires with provided IDS
+      const forms = await formModel.find({
+        _id: [...list]
+      });
+      const tasksWithQuestionaires = {
+        tasks,
+        forms
+      };
+      return Response.customResponse(
+        res, 200,
+        'User tasks retrieved successfully',
+        tasksWithQuestionaires
+      );
     } catch (error) {
       return next(error);
     }
