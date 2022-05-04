@@ -1,4 +1,4 @@
-import mongooseModels from '../../database/models';
+import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
 /** class representing FormController */

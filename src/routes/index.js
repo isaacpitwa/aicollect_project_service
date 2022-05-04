@@ -1,12 +1,12 @@
-import swagger from 'swagger-ui-express';
+// import swagger from 'swagger-ui-express';
 import express from 'express';
-import swaggerDoc from '../../swagger.json';
+// import swaggerDoc from '../../swagger.json';
 import index from './api';
 
 const router = express.Router();
 
 router.use('/', index);
 
-router.use('/api/docs', swagger.serve, swagger.setup(swaggerDoc));
+// router.use('/api/docs', swagger.serve, swagger.setup(swaggerDoc));
 
 export default router;

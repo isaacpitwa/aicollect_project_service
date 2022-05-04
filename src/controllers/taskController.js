@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import mongooseModels from '../../database/models';
+import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
 const { taskModel } = mongooseModels;
@@ -72,9 +72,8 @@ class TaskController {
     try {
       const { userId, name, roles } = req.body;
       const user = {
-        userId, name, roles
+        userId, name, role: roles
       };
-      // user => userId, name, roles
       const tasks = await taskModel.find({ team: { $in: user } });
       return Response.customResponse(res, 200, 'User tasks retrieved successfully', tasks);
     } catch (error) {

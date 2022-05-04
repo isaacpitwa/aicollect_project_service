@@ -13,7 +13,9 @@ const sectorschema = new Schema({
   title: { type: String, required: true }
 });
 
-/** Projects created by Clients (Users) */
+/** Projects created by Clients (Users)
+ * Project Owner is the First User created (Client)
+ */
 const projectschema = new Schema({
   _id: Types.ObjectId,
   projectname: { type: String, required: true },

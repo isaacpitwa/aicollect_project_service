@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import mongooseModels from '../../database/models';
+import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
 const { responseModel } = mongooseModels;
