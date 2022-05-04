@@ -1,6 +1,6 @@
 // import getDatabaseConnection from '../config/mongodbConnection';
 import mongoose from 'mongoose';
-import mongooseModels from '../../database/models';
+import mongooseModels from '../database/models';
 import Response from '../utils/response';
 import { redisConnection } from '../utils/sessionManager';
 
