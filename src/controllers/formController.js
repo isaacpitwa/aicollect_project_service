@@ -96,7 +96,6 @@ class FormController {
     try {
       const { formModel } = mongooseModels;
       const { clientId, projectId } = req.body;
-      console.log('Module is here: ', req.body.module);
       if (!clientId) {
         return Response.badRequestError(res, 'CliendId was not provided');
       }
@@ -127,6 +126,20 @@ class FormController {
       return next(error);
     }
   }
+
+  /**
+   * @description Create Questionaire Templates
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Function
+   * @returns {object} Response from get Create Questionaire Templates Endpoint
+   */
+  // static async createQuestionaireTemplate(req, res, next) {
+  //   try {
+  //     const
+  //   } catch (error) {
+  //   }
+  // }
 }
 
 export default FormController;
