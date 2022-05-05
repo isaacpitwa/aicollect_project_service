@@ -149,6 +149,45 @@ class FormController {
       return next(error);
     }
   }
+
+  /**
+   * @description Update Questionaire Templates
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Function
+   * @returns {object} Response from get Update Questionaire Templates Endpoint
+   */
+  static async updateQuestionaireTemplate(req, res, next) {
+    try {
+      const updateForm = await templateModel.findOneAndUpdate({
+        _id: req.body.templateId
+      }, req.body, { new: true });
+      return Response.customResponse(res, 200, 'Form Updated successfully', updateForm);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * Helper controller function to delete templates
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Next Function
+   * @returns {object} Response from Delete Templates Endpoint
+   */
+  static async deleteTemplate(req, res, next) {
+    try {
+      const { templateId } = req.params;
+      const templateExists = await templateModel.findById(templateId);
+      if (!templateExists) {
+        return Response.notFoundError(res, 'Template does not exist');
+      }
+      const deleteTemplate = await templateModel.deleteOne({ _id: templateId });
+      return Response.customResponse(res, 200, 'Template was successfully deleted', deleteTemplate);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default FormController;

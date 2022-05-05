@@ -91,6 +91,14 @@ router
   .post(verify, FormController.createQuestionaireTemplate)
   .all(method);
 router
+  .route('/forms/templates/:templateId')
+  .delete(verify, FormController.deleteTemplate)
+  .all(method);
+router
+  .route('/forms/templates/update')
+  .post(verify, FormController.updateQuestionaireTemplate)
+  .all(method);
+router
   .route('/forms/responses/:formId')
   .get(verify, ResponseController.getUserResponses)
   .all(method);
