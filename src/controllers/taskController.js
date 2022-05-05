@@ -131,7 +131,6 @@ class TaskController {
       });
       task.save((error, saved) => {
         if (error) {
-          console.log(error);
           return Response.badRequestError(res, 'Something went wrong while creating task');
         }
         return Response.customResponse(res, 201, 'Task created successfully', saved);

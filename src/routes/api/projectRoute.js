@@ -34,6 +34,10 @@ router
   .route('/projects/:id')
   .get(verify, ProjectController.getProjectDetails)
   .all(method);
+router
+  .route('/projects/:projectId')
+  .delete(verify, ProjectController.deleteProject)
+  .all(method);
 
 /** TASK ROUTES */
 router
