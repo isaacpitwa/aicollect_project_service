@@ -1,6 +1,8 @@
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
+const { templateModel } = mongooseModels;
+
 /** class representing FormController */
 class FormController {
   /**
@@ -13,12 +15,10 @@ class FormController {
   static async createForm(req, res, next) {
     try {
       const form = req.body;
-      console.log(req.body);
       const { formModel } = mongooseModels;
       const newForm = new formModel({ ...form });
       newForm.save((error, saved) => {
         if (error) {
-          console.log(error);
           return Response.badRequestError(res, 'Something went wrong');
         }
         return Response.customResponse(res, 201, 'Form created successfully', saved);
@@ -134,12 +134,58 @@ class FormController {
    * @param {function} next Express Function
    * @returns {object} Response from get Create Questionaire Templates Endpoint
    */
-  // static async createQuestionaireTemplate(req, res, next) {
-  //   try {
-  //     const
-  //   } catch (error) {
-  //   }
-  // }
+  static async createQuestionaireTemplate(req, res, next) {
+    try {
+      const newTemplate = new templateModel({ ...req.body });
+      newTemplate.save((error, saved) => {
+        if (error) {
+          return Response.badRequestError(res, 'Something went wrong');
+        }
+        return Response.customResponse(res, 201, 'Form created successfully', saved);
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * @description Update Questionaire Templates
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Function
+   * @returns {object} Response from get Update Questionaire Templates Endpoint
+   */
+  static async updateQuestionaireTemplate(req, res, next) {
+    try {
+      const updateForm = await templateModel.findOneAndUpdate({
+        _id: req.body.templateId
+      }, req.body, { new: true });
+      return Response.customResponse(res, 200, 'Form Updated successfully', updateForm);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * Helper controller function to delete templates
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Next Function
+   * @returns {object} Response from Delete Templates Endpoint
+   */
+  static async deleteTemplate(req, res, next) {
+    try {
+      const { templateId } = req.params;
+      const templateExists = await templateModel.findById(templateId);
+      if (!templateExists) {
+        return Response.notFoundError(res, 'Template does not exist');
+      }
+      const deleteTemplate = await templateModel.deleteOne({ _id: templateId });
+      return Response.customResponse(res, 200, 'Template was successfully deleted', deleteTemplate);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default FormController;

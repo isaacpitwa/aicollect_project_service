@@ -34,6 +34,10 @@ router
   .route('/projects/:id')
   .get(verify, ProjectController.getProjectDetails)
   .all(method);
+router
+  .route('/projects/:projectId')
+  .delete(verify, ProjectController.deleteProject)
+  .all(method);
 
 /** TASK ROUTES */
 router
@@ -81,6 +85,18 @@ router
 router
   .route('/forms/create/newForm')
   .post(verify, FormController.createForm)
+  .all(method);
+router
+  .route('/forms/templates/newTemplate')
+  .post(verify, FormController.createQuestionaireTemplate)
+  .all(method);
+router
+  .route('/forms/templates/:templateId')
+  .delete(verify, FormController.deleteTemplate)
+  .all(method);
+router
+  .route('/forms/templates/update')
+  .post(verify, FormController.updateQuestionaireTemplate)
   .all(method);
 router
   .route('/forms/responses/:formId')

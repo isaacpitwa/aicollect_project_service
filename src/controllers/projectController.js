@@ -191,6 +191,27 @@ class ProjectController {
       return next(error);
     }
   }
+
+  /**
+   * Helper controller function to delete Projects
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Next Function
+   * @returns {object} Response from Delete Project Endpoint
+   */
+  static async deleteProject(req, res, next) {
+    try {
+      const { projectId } = req.params;
+      const projectExists = await projectModel.findById(projectId);
+      if (!projectExists) {
+        return Response.notFoundError(res, 'Project does not exist');
+      }
+      const deleteProject = await projectModel.deleteOne({ _id: projectId });
+      return Response.customResponse(res, 200, 'Project was successfully deleted', deleteProject);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default ProjectController;
