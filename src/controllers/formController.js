@@ -15,12 +15,10 @@ class FormController {
   static async createForm(req, res, next) {
     try {
       const form = req.body;
-      console.log(req.body);
       const { formModel } = mongooseModels;
       const newForm = new formModel({ ...form });
       newForm.save((error, saved) => {
         if (error) {
-          console.log(error);
           return Response.badRequestError(res, 'Something went wrong');
         }
         return Response.customResponse(res, 201, 'Form created successfully', saved);

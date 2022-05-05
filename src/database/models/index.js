@@ -34,6 +34,7 @@ const formSchema = new Schema({
   createdBy: userschema,
   clientId: { type: Number, required: true },
   projectId: { type: String },
+  formType: { type: String },
   module: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
