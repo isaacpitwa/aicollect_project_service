@@ -87,6 +87,10 @@ router
   .post(verify, FormController.createForm)
   .all(method);
 router
+  .route('/forms/templates/newTemplate')
+  .post(verify, FormController.createQuestionaireTemplate)
+  .all(method);
+router
   .route('/forms/responses/:formId')
   .get(verify, ResponseController.getUserResponses)
   .all(method);

@@ -47,7 +47,6 @@ const templateSchema = new Schema({
   version: { type: Number, required: true },
   regions: { type: Array, required: true, default: [] },
   createdBy: userschema,
-  projectId: { type: String, required: false },
   module: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

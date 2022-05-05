@@ -1,6 +1,8 @@
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
+const { templateModel } = mongooseModels;
+
 /** class representing FormController */
 class FormController {
   /**
@@ -134,12 +136,19 @@ class FormController {
    * @param {function} next Express Function
    * @returns {object} Response from get Create Questionaire Templates Endpoint
    */
-  // static async createQuestionaireTemplate(req, res, next) {
-  //   try {
-  //     const
-  //   } catch (error) {
-  //   }
-  // }
+  static async createQuestionaireTemplate(req, res, next) {
+    try {
+      const newTemplate = new templateModel({ ...req.body });
+      newTemplate.save((error, saved) => {
+        if (error) {
+          return Response.badRequestError(res, 'Something went wrong');
+        }
+        return Response.customResponse(res, 201, 'Form created successfully', saved);
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default FormController;
