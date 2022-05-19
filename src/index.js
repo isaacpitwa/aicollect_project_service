@@ -37,10 +37,10 @@ let MONGO_URI;
 let mongoConfigObject;
 
 if (process.env.NODE_ENV === 'production') {
-  MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@db-mongodb-fra1-40589-c19b3827.mongo.ondigitalocean.com/aicollect_test?retryWrites=true&w=majority`;
+  MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@db-mongodb-fra1-40589-c19b3827.mongo.ondigitalocean.com/aicollect_test?retryWrites=true&w=majority&authSource=admin`;
   mongoConfigObject = {
-    user: process.env.MONGO_USER,
-    pass: process.env.MONGO_PASS,
+    // user: process.env.MONGO_USER,
+    // pass: process.env.MONGO_PASS,
     keepAlive: true,
     keepAliveInitialDelay: 300000,
     useNewUrlParser: true,
