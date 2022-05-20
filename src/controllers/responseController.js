@@ -42,7 +42,7 @@ class ResponseController {
   static async getUserResponses(req, res, next) {
     try {
       const { formId } = req.params;
-      const responses = await responseModel.find({ formId });
+      const responses = await responseModel.find({ form: formId });
       return Response.customResponse(res, 200, 'Responses retreived', responses);
     } catch (error) {
       return next(error);
