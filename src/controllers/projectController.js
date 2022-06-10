@@ -89,6 +89,7 @@ class ProjectController {
       //   return Response.customResponse(res,
       // 200, 'Projects retrieved successfully', projectsFromDB);
       // });
+      console.log('User requesting projects: ', req.user);
       const projects = await mongooseModels.projectModel.find({
         projectOwner: req.body.clientId
       });
