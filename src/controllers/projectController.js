@@ -91,7 +91,6 @@ class ProjectController {
       // });
       const { roles, id } = req.user;
       let projects;
-
       if (['Owner', 'Admin'].includes(roles)) {
         projects = await mongooseModels.projectModel.find({ projectOwner: req.body.clientId });
       } else if (roles === 'Supervisor') {
