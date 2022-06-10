@@ -89,9 +89,10 @@ class ProjectController {
       //   return Response.customResponse(res,
       // 200, 'Projects retrieved successfully', projectsFromDB);
       // });
-      const projects = await mongooseModels.projectModel.find({
-        projectOwner: req.body.clientId
-      });
+      const { roles, id } = req.user;
+      const projects = ['Owner', 'Admin'].includes(roles)
+        ? await mongooseModels.projectModel.find({ projectOwner: req.body.clientId })
+        : await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
       return Response.customResponse(res, 200, 'Projects retrieved successfully', projects);
     } catch (error) {
       return next(error);
