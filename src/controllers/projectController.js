@@ -96,7 +96,7 @@ class ProjectController {
       } else if (roles === 'Supervisor') {
         projects = await mongooseModels.projectModel.find({
           'projectTeam.supervisor': {
-            id
+            $elemMatch: { id }
           }
         });
       } else {
