@@ -6,6 +6,7 @@ import ResponseController from '../../controllers/responseController';
 import verify from '../../middleware/auth';
 // import ProjectValidator from '../../validations/projectValidations';
 import method from '../../utils/method';
+import Access from '../../middleware/userRoles';
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router
   .all(method);
 router
   .route('/projects/userProjects')
-  .post(verify, ProjectController.getUserProjects)
+  .post(verify, Access.accessToProjects, ProjectController.getUserProjects)
   .all(method);
 router
   .route('/projects/update')
