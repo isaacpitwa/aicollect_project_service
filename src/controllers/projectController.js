@@ -90,9 +90,16 @@ class ProjectController {
       // 200, 'Projects retrieved successfully', projectsFromDB);
       // });
       const { roles, id } = req.user;
-      const projects = ['Owner', 'Admin'].includes(roles)
-        ? await mongooseModels.projectModel.find({ projectOwner: req.body.clientId })
-        : await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
+      let projects;
+
+      if (['Owner', 'Admin'].includes(roles)) {
+        projects = await mongooseModels.projectModel.find({ projectOwner: req.body.clientId });
+      } else if (roles === 'Supervisor') {
+        projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
+      } else {
+        projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
+      }
+
       return Response.customResponse(res, 200, 'Projects retrieved successfully', projects);
     } catch (error) {
       return next(error);
@@ -109,7 +116,7 @@ class ProjectController {
   static async addMembersToProject(req, res, next) {
     try {
       const {
-        userId, name, role, projectId, createdBy
+        userId, name, role, projectId, createdBy, supervisor
       } = req.body;
       // console.log(req.body);
       const newTeamMember = {
@@ -117,6 +124,7 @@ class ProjectController {
         name,
         role,
         createdBy,
+        supervisor,
         createdAt: new Date()
       };
       const projectExists = await mongooseModels.projectModel.findOne({ _id: projectId });
