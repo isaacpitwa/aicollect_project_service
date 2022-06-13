@@ -89,18 +89,17 @@ class ProjectController {
       //   return Response.customResponse(res,
       // 200, 'Projects retrieved successfully', projectsFromDB);
       // });
-      const { roles, id } = req.user;
+      const { roles, id, } = req.user;
       let projects;
       if (['Owner', 'Admin'].includes(roles)) {
         projects = await mongooseModels.projectModel.find({ projectOwner: req.body.clientId });
       } else if (roles === 'Supervisor') {
         projects = await mongooseModels.projectModel.find({
-          'projectTeam.supervisor': {
-            $elemMatch: {
-              id:id
-            }
-          }
+          'projectTeam.supervisor': id
         });
+        // Remove Supervisor from projectTeam
+        projects = projects.filter(
+          (project) => project.projectTeam.some((member) => member.supervisor === id));
       } else {
         projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
       }
