@@ -97,6 +97,9 @@ class ProjectController {
         projects = await mongooseModels.projectModel.find({
           'projectTeam.supervisor': id
         });
+        // Remove Supervisor from projectTeam
+        projects = projects.filter(
+          (project) => project.projectTeam.some((member) => member.supervisor === id));
       } else {
         projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
       }
