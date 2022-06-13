@@ -97,7 +97,6 @@ class ProjectController {
         projects = await mongooseModels.projectModel.find({
           'projectTeam.supervisor': id
         });
-        // Remove Supervisor from projectTeam
         projects = projects.map(
           (project) => {
             project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);
@@ -157,6 +156,7 @@ class ProjectController {
   static async getProjectDetails(req, res, next) {
     try {
       const projectId = req.params.id;
+      const { roles, id, } = req.user;
       // check for project from Redis server before dialing up the server
       // eslint-disable-next-line no-unused-vars
       redisConnection.get('projectId', async (err, project) => {
@@ -173,8 +173,15 @@ class ProjectController {
         // }
         // dial up server
         const projectFromDB = await mongooseModels.projectModel.findOne({ _id: projectId });
+
         if (!projectFromDB) {
           return Response.notFoundError(res, 'Project was either deleted or does not exist');
+        }
+        // Remmove users not supervised by the user
+        if (roles === 'Supervisor') {
+          projectFromDB.projectTeam = projectFromDB.projectTeam.filter(
+            (member) => member.supervisor === id
+          );
         }
         // eslint-disable-next-line no-underscore-dangle
         redisConnection.setex('projectId', 1440, JSON.stringify(projectFromDB));
