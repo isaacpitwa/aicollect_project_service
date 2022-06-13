@@ -46,7 +46,7 @@ class ResponseController {
       let responses = [];
       responses = await responseModel.find({ form: formId });
       if (roles === 'Supervisor') {
-        responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id });
+        responses = await responseModel.find({ form: formId, submittedBy: { supervisor: id } });
       }
       return Response.customResponse(res, 200, 'Responses retreived', responses);
     } catch (error) {
