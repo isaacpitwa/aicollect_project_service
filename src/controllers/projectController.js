@@ -98,8 +98,12 @@ class ProjectController {
           'projectTeam.supervisor': id
         });
         // Remove Supervisor from projectTeam
-        projects = projects.filter(
-          (project) => project.projectTeam.some((member) => member.supervisor === id));
+        projects = projects.map(
+          (project) => {
+            project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);
+            return project;
+          }
+        );
       } else {
         projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
       }
