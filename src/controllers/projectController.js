@@ -97,6 +97,12 @@ class ProjectController {
         projects = await mongooseModels.projectModel.find({
           'projectTeam.supervisor': id
         });
+        projects = projects.map(
+          (project) => {
+            project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);
+            return project;
+          }
+        );
       } else {
         projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
       }
