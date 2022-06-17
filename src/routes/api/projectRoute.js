@@ -7,6 +7,7 @@ import verify from '../../middleware/auth';
 // import ProjectValidator from '../../validations/projectValidations';
 import method from '../../utils/method';
 import Access from '../../middleware/userRoles';
+import FieldController from '../../controllers/fieldController';
 
 const router = express.Router();
 
@@ -106,6 +107,13 @@ router
 router
   .route('/forms/submit/new-response')
   .post(verify, ResponseController.createResponse)
+  .all(method);
+
+// Field Registartion Forms
+
+router
+  .route('/fields/create/newField')
+  .post(verify, FieldController.createFieldForm)
   .all(method);
 
 export default router;
