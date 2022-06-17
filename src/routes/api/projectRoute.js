@@ -110,10 +110,18 @@ router
   .all(method);
 
 // Field Registartion Forms
+router
+  .route('/fields/forms')
+  .post(verify, FieldController.getUserFieldForms)
+  .all(method);
 
 router
   .route('/fields/create/newField')
   .post(verify, FieldController.createFieldForm)
   .all(method);
 
+router
+  .route('/fields/:fieldFormId')
+  .get(verify, FieldController.getFieldFormDetails)
+  .all(method);
 export default router;
