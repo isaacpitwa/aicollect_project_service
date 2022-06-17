@@ -128,7 +128,7 @@ const responseModel = model('Response', responseSchema);
 const taskModel = model('Task', taskSchema);
 const templateModel = model('Template', templateSchema);
 const fieldModel = model('Field', fieldSchema);
-const fieldResponseModel = model('Field', fieldResponseSchema);
+const fieldResponseModel = model('FieldResponse', fieldResponseSchema);
 
 const mongooseModels = {
   userModel,
