@@ -42,12 +42,12 @@ class ResponseController {
   static async getUserResponses(req, res, next) {
     try {
       const { formId } = req.params;
-      // const { roles, id, } = req.user;
+      const { roles, id, } = req.user;
       let responses = [];
       responses = await responseModel.find({ form: formId });
-      // if (roles === 'Supervisor') {
-      //   responses = await responseModel.find({ form: formId, submittedBy: { supervisor: id } });
-      // }
+      if (roles === 'Supervisor') {
+        responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id });
+      }
       return Response.customResponse(res, 200, 'Responses retreived', responses);
     } catch (error) {
       return next(error);

@@ -13,8 +13,8 @@ class FieldController {
   static async createFieldForm(req, res, next) {
     try {
       const form = req.body;
-      const { formModel } = mongooseModels;
-      const newForm = new formModel({ ...form });
+      const { fieldModel } = mongooseModels;
+      const newForm = new fieldModel({ ...form });
       newForm.save((error, saved) => {
         if (error) {
           return Response.badRequestError(res, 'Something went wrong');
@@ -35,8 +35,8 @@ class FieldController {
    */
   static async updateFieldForm(req, res, next) {
     try {
-      const { formModel } = mongooseModels;
-      const updateForm = await formModel.findOneAndUpdate({
+      const { fieldModel } = mongooseModels;
+      const updateForm = await fieldModel.findOneAndUpdate({
         _id: req.body.formId
       }, req.body, { new: true });
       return Response.customResponse(res, 200, 'Form Updated successfully', updateForm);
