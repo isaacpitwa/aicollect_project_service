@@ -31,6 +31,7 @@ const formSchema = new Schema({
   name: { type: String, required: true },
   version: { type: Number, required: true },
   regions: { type: Array, required: true, default: [] },
+  fieldForms: { type: Array, required: true, default: [] },
   createdBy: userschema,
   clientId: { type: Number, required: true },
   projectId: { type: String },
@@ -109,7 +110,8 @@ const fieldSchema = new Schema({
 
 /** Responses submitted against the questionaires */
 const fieldResponseSchema = new Schema({
-  form: { type: String, required: true },
+  questionaire: { type: String, required: true },
+  fieldForm: { type: String, required: true },
   submittedBy: userschema,
   submittedOn: { type: Date, required: true },
   timeSpentToSubmit: { type: String, required: true },
