@@ -93,9 +93,9 @@ class FieldController {
   static async getfieldFormDetails(req, res, next) {
     try {
       const { fieldModel } = mongooseModels;
-      const { fieldId } = req.params;
-      const form = await fieldModel.findOne({ _id: fieldId }).exec();
-      return Response.customResponse(res, 200, 'Form Details retrieved successfully', form);
+      const { fieldFormId } = req.params;
+      const form = await fieldModel.findOne({ _id: fieldFormId }).exec();
+      return Response.customResponse(res, 200, ' Fireld Registartion Form Details retrieved successfully', form);
     } catch (error) {
       return next(error);
     }
