@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
-const { responseModel } = mongooseModels;
+const { fieldResponseModel } = mongooseModels;
 
 /** class representing response controller functions */
-class ResponseController {
+class FieldResponseController {
   /**
    * @description Creates a new response
    * @param {object} req Express Request
@@ -13,11 +13,11 @@ class ResponseController {
    * @param {Function} next Express Next Function
    * @returns {object} Response from create response
    */
-  static async createResponse(req, res, next) {
+  static async createfieldResponse(req, res, next) {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
       // UPLOAD PRESET ==> aicollect_field_responses
-      const response = new responseModel({
+      const response = new fieldResponseModel({
         _id: mongoose.Types.ObjectId(),
         ...req.body
       });
@@ -42,12 +42,12 @@ class ResponseController {
   static async getUserResponses(req, res, next) {
     try {
       const { formId } = req.params;
-      const { roles, id, } = req.user;
+      // const { roles, id, } = req.user;
       let responses = [];
-      responses = await responseModel.find({ form: formId });
-      if (roles === 'Supervisor') {
-        responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id });
-      }
+      responses = await fieldResponseModel.find({ form: formId });
+      // if (roles === 'Supervisor') {
+      //   responses = await responseModel.find({ form: formId, submittedBy: { supervisor: id } });
+      // }
       return Response.customResponse(res, 200, 'Responses retreived', responses);
     } catch (error) {
       return next(error);
@@ -55,4 +55,4 @@ class ResponseController {
   }
 }
 
-export default ResponseController;
+export default FieldResponseController;

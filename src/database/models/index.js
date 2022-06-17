@@ -31,6 +31,7 @@ const formSchema = new Schema({
   name: { type: String, required: true },
   version: { type: Number, required: true },
   regions: { type: Array, required: true, default: [] },
+  fieldForms: { type: Array, required: true, default: [] },
   createdBy: userschema,
   clientId: { type: Number, required: true },
   projectId: { type: String },
@@ -92,6 +93,32 @@ const taskSchema = new Schema({
   createdBy: userschema,
 });
 
+/** field Registrations created under a  Questionaire */
+const fieldSchema = new Schema({
+  name: { type: String, required: true },
+  version: { type: Number, required: true },
+  createdBy: userschema,
+  clientId: { type: Number, required: true },
+  projectId: { type: String },
+  formType: { type: String },
+  module: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  status: { type: Boolean, required: true, default: false },
+  formFields: { type: Array, default: [] },
+});
+
+/** Responses submitted against the questionaires */
+const fieldResponseSchema = new Schema({
+  questionaire: { type: String, required: true },
+  fieldForm: { type: String, required: true },
+  submittedBy: userschema,
+  submittedOn: { type: Date, required: true },
+  timeSpentToSubmit: { type: String, required: true },
+  gps: { type: Object, required: true },
+  answers: { type: Array, required: true }
+});
+
 const userModel = model('User', userschema);
 const sectorModel = model('Sector', sectorschema);
 const projectModel = model('Project', projectschema);
@@ -100,6 +127,8 @@ const formModel = model('Questionaire', formSchema);
 const responseModel = model('Response', responseSchema);
 const taskModel = model('Task', taskSchema);
 const templateModel = model('Template', templateSchema);
+const fieldModel = model('Field', fieldSchema);
+const fieldResponseModel = model('Field', fieldResponseSchema);
 
 const mongooseModels = {
   userModel,
@@ -109,7 +138,9 @@ const mongooseModels = {
   formModel,
   responseModel,
   taskModel,
-  templateModel
+  templateModel,
+  fieldModel,
+  fieldResponseModel
 };
 
 export default mongooseModels;
