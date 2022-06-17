@@ -121,6 +121,11 @@ router
   .all(method);
 
 router
+  .route('/fields/update')
+  .post(verify, FieldController.updateFieldForm)
+  .all(method);
+
+router
   .route('/fields/:fieldFormId')
   .get(verify, FieldController.getFieldFormDetails)
   .all(method);
