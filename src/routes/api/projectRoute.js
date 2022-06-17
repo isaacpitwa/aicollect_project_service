@@ -124,4 +124,5 @@ router
   .route('/fields/:fieldFormId')
   .get(verify, FieldController.getFieldFormDetails)
   .all(method);
+
 export default router;
