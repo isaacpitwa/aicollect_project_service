@@ -121,8 +121,18 @@ router
   .all(method);
 
 router
+  .route('/fields/update')
+  .post(verify, FieldController.updateFieldForm)
+  .all(method);
+
+router
   .route('/fields/:fieldFormId')
   .get(verify, FieldController.getFieldFormDetails)
+  .all(method);
+
+router
+  .route('/fields/responses/:fieldFormId')
+  .get(verify, FieldController.getFieldFormResponses)
   .all(method);
 
 export default router;
