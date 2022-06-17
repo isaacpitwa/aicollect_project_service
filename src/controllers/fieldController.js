@@ -100,6 +100,29 @@ class FieldController {
       return next(error);
     }
   }
+
+  /**
+   * @description Gets User Responses
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {Function} next Express Next Function
+   * @returns {object} Response from get responses
+   */
+  static async getFieldFormResponses(req, res, next) {
+    try {
+      const { fieldFormId } = req.params;
+      const { fieldModel } = mongooseModels;
+      // const { roles, id, } = req.user;
+      let responses = [];
+      responses = await fieldModel.find({ form: fieldFormId });
+      // if (roles === 'Supervisor') {
+      //   responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id });
+      // }
+      return Response.customResponse(res, 200, 'Responses retreived', responses);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 export default FieldController;
