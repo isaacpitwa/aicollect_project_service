@@ -36,6 +36,7 @@ class FieldController {
   static async updateFieldForm(req, res, next) {
     try {
       const { fieldModel } = mongooseModels;
+      req.body.updatedAt = Date.now();
       const updateForm = await fieldModel.findOneAndUpdate({
         _id: req.body.formId
       }, req.body, { new: true });
@@ -111,14 +112,14 @@ class FieldController {
   static async getFieldFormResponses(req, res, next) {
     try {
       const { fieldFormId } = req.params;
-      const { fieldModel } = mongooseModels;
-      // const { roles, id, } = req.user;
+      const { fieldResponseModel } = mongooseModels;
+      const { roles, id, } = req.user;
       let responses = [];
-      responses = await fieldModel.find({ form: fieldFormId });
-      // if (roles === 'Supervisor') {
-      //   responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id });
-      // }
-      return Response.customResponse(res, 200, 'Responses retreived', responses);
+      responses = await fieldResponseModel.find({ form: fieldFormId }).exec();
+      if (roles === 'Supervisor') {
+        responses = await fieldResponseModel.find({ form: fieldFormId, 'submittedBy.supervisor': id }).exec();
+      }
+      return Response.customResponse(res, 200, 'Responses retreived', responses).exec();
     } catch (error) {
       return next(error);
     }
