@@ -84,7 +84,7 @@ const taskSchema = new Schema({
   schedule: { type: Array, default: [] },
   team: { type: Array, default: [] },
   questionaire: { type: Array, required: true, default: [] },
-  fieldForms: { type: Array, required: true, default: [] },
+  fieldForm: { type: Array, required: true, default: [] },
   rescheduled: { type: Boolean, required: true, default: false },
   completed: { type: Boolean, required: true, default: false },
   priority: { type: String, required: true, default: 'Normal' },
