@@ -28,18 +28,18 @@ class ResponseController {
         if (err) {
           return Response.badRequestError(res, 'Please check that all the fields are right');
         }
-        await fields.map((field) => {
-          fieldResponseModel
+        fields.map(async (field) => {
+          await fieldResponseModel
             .findOne({ region: field.region })
             .sort('-prefix_id') // give me the max
-            .exec((err, response) => {
+            .exec(async (err, maxField) => {
               const newField = new fieldResponseModel({
                 _id: mongoose.Types.ObjectId(),
                 ...field,
                 response: saved._id,
-                prefix_id: response ? response.prefix_id + 1 : 0,
+                prefix_id: maxField ? maxField.prefix_id + 1 : 0,
               });
-              newField.save((err, savedField) => {
+              await newField.save((err, savedField) => {
                 if (err) {
                   return Response.badRequestError(res, 'Please check that all the form Field fields are right');
                 }
