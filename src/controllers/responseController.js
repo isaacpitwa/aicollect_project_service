@@ -18,7 +18,7 @@ class ResponseController {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
       // UPLOAD PRESET ==> aicollect_field_responses
-      const fields = [...req.boy.fields];
+      const fields = [...req.body.fields];
       delete req.body.fields;
       const response = new responseModel({
         _id: mongoose.Types.ObjectId(),
