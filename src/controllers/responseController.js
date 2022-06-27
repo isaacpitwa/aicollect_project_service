@@ -37,14 +37,13 @@ class ResponseController {
                 _id: mongoose.Types.ObjectId(),
                 ...field,
                 response: saved._id,
-                prefix_id: response?  response.prefix_id + 1:0,
+                prefix_id: response ? response.prefix_id + 1 : 0,
               });
-              newField.save(err, saved) => {
+              newField.save((err, savedField) => {
                 if (err) {
                   return Response.badRequestError(res, 'Please check that all the form Field fields are right');
                 }
-               return;
-              } 
+              });
             });
         });
         return Response.customResponse(res, 201, 'Response submited successfully', saved);
