@@ -115,9 +115,9 @@ class FieldController {
       const { fieldResponseModel } = mongooseModels;
       const { roles, id, } = req.user;
       let responses = [];
-      responses = await fieldResponseModel.find({ form: fieldFormId }).exec();
+      responses = await fieldResponseModel.find({ questionaire: fieldFormId }).exec();
       if (roles === 'Supervisor') {
-        responses = await fieldResponseModel.find({ form: fieldFormId, 'submittedBy.supervisor': id }).exec();
+        responses = await fieldResponseModel.find({ questionaire: fieldFormId, 'submittedBy.supervisor': id }).exec();
       }
       return Response.customResponse(res, 200, 'Responses retreived', responses).exec();
     } catch (error) {
