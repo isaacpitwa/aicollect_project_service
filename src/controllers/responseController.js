@@ -34,7 +34,7 @@ class ResponseController {
             .sort('-prefix_id') // give me the max
             .exec(async (err, maxField) => {
               if (err) {
-                console.log('Error Fetching Max Field', err);
+                console.log('Error Fetching Max Field: ', err);
               }
               const newField = new fieldResponseModel({
                 _id: mongoose.Types.ObjectId(),
@@ -42,6 +42,7 @@ class ResponseController {
                 response: saved._id,
                 prefix_id: maxField ? maxField.prefix_id + 1 : 0,
               });
+              console.log('=> New Field To be added: ', newField);
               await newField.save((error, savedField) => {
                 if (error) {
                   console.log('Field Record Response Logger => ', error);
