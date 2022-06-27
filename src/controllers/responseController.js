@@ -1,8 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import mongoose from 'mongoose';
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
-const { responseModel } = mongooseModels;
+const { responseModel, fieldResponseModel } = mongooseModels;
 
 /** class representing response controller functions */
 class ResponseController {
@@ -17,6 +18,8 @@ class ResponseController {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
       // UPLOAD PRESET ==> aicollect_field_responses
+      const fields = [...req.boy.fields];
+      delete req.body.fields;
       const response = new responseModel({
         _id: mongoose.Types.ObjectId(),
         ...req.body
@@ -25,6 +28,25 @@ class ResponseController {
         if (err) {
           return Response.badRequestError(res, 'Please check that all the fields are right');
         }
+        fields.map((field) => {
+          fieldResponseModel
+            .findOne({ region: field.region })
+            .sort('-prefix_id') // give me the max
+            .exec((err, response) => {
+              const newField = new fieldResponseModel({
+                _id: mongoose.Types.ObjectId(),
+                ...field,
+                response: saved._id,
+                prefix_id: response?  response.prefix_id + 1:0,
+              });
+              newField.save(err, saved) => {
+                if (err) {
+                  return Response.badRequestError(res, 'Please check that all the form Field fields are right');
+                }
+               return;
+              } 
+            });
+        });
         return Response.customResponse(res, 201, 'Response submited successfully', saved);
       });
     } catch (error) {
