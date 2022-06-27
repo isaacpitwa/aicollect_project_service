@@ -24,11 +24,11 @@ class ResponseController {
         _id: mongoose.Types.ObjectId(),
         ...req.body
       });
-      response.save((err, saved) => {
+      response.save(async (err, saved) => {
         if (err) {
           return Response.badRequestError(res, 'Please check that all the fields are right');
         }
-        fields.map((field) => {
+        await fields.map((field) => {
           fieldResponseModel
             .findOne({ region: field.region })
             .sort('-prefix_id') // give me the max
