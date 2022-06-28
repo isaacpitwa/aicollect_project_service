@@ -18,6 +18,7 @@ class ResponseController {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
       // UPLOAD PRESET ==> aicollect_field_responses
+      console.log('Logging Request Body => ', req.body);
       const fields = [...req.body.fields];
       delete req.body.fields;
       const response = new responseModel({
@@ -36,17 +37,17 @@ class ResponseController {
               if (err) {
                 console.log('Error Fetching Max Field: ', err);
               }
+              console.log('=> New Field To be added: ', field);
               const newField = new fieldResponseModel({
                 _id: mongoose.Types.ObjectId(),
                 ...field,
                 response: saved._id,
-                prefix_id: maxField ? maxField.prefix_id + 1 : 0,
+                prefix_id: maxField ? maxField.prefix_id + 1 : 1,
               });
               console.log('=> New Field To be added: ', newField);
               await newField.save((error, savedField) => {
                 if (error) {
                   console.log('Field Record Response Logger => ', error);
-                  return Response.badRequestError(res, 'Please check that all the form Field fields are right');
                 }
               });
             });
