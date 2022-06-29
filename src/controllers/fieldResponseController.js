@@ -41,10 +41,10 @@ class FieldResponseController {
    */
   static async getUserResponses(req, res, next) {
     try {
-      const { formId } = req.params;
+      const { fieldFormId } = req.params;
       // const { roles, id, } = req.user;
       let responses = [];
-      responses = await fieldResponseModel.find({ form: formId });
+      responses = await fieldResponseModel.find({ form: fieldFormId });
       // if (roles === 'Supervisor') {
       //   responses = await responseModel.find({ form: formId, submittedBy: { supervisor: id } });
       // }

@@ -62,7 +62,8 @@ const responseSchema = new Schema({
   submittedOn: { type: Date, required: true },
   timeSpentToSubmit: { type: String, required: true },
   gps: { type: Object, required: true },
-  answers: { type: Array, required: true }
+  answers: { type: Array, required: true },
+  region: { type: Object, required: true },
 });
 
 /** Modules created Under a sector (For example Registration Module) */
