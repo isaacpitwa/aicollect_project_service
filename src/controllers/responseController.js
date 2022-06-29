@@ -34,6 +34,7 @@ class ResponseController {
           });
           response.save(async (err, saved) => {
             if (err) {
+              console.log('Error Saving Response: ', err);
               return Response.badRequestError(res, 'Please check that all the fields are right');
             }
             const formattedFields = fields.map((field) => {
