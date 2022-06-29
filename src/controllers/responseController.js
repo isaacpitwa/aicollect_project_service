@@ -18,7 +18,6 @@ class ResponseController {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
       // UPLOAD PRESET ==> aicollect_field_responses
-      console.log('Logging Request Body => ', req.body);
       const { fields } = req.body;
       delete req.body.fields;
 
@@ -38,6 +37,7 @@ class ResponseController {
               return Response.badRequestError(res, 'Please check that all the fields are right');
             }
             const formattedFields = fields.map((field) => {
+              console.log('Logging Request Body => ', field.region);
               field.code = `${field.region.prefix}${String(maxField ? maxField.prefix_id + 1 : 1).padStart(5, '0')}`;
               field.response = saved._id;
               field._id = mongoose.Types.ObjectId();
@@ -48,6 +48,7 @@ class ResponseController {
               if (err) {
                 console.log('Field Recordd Response Logger => ', err);
               }
+              console.log('Field Record Response Logger => ', docs);
             });
             return Response.customResponse(res, 201, 'Response submited successfully', saved);
           });
