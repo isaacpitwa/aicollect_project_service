@@ -124,7 +124,7 @@ const fieldResponseSchema = new Schema({
   region: { type: Object, required: true },
   person: { type: String, required: true },
   response: { type: String, required: true },
-  prefix_id: { type: Number, required: true },
+  code: { type: String, required: true },
 });
 
 const userModel = model('User', userschema);
