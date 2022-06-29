@@ -30,7 +30,8 @@ class ResponseController {
           }
           const response = new responseModel({
             _id: mongoose.Types.ObjectId(),
-            ...req.body
+            ...req.body,
+            prefix_id: maxField ? maxField.prefix_id + 1 : 1
           });
           response.save(async (err, saved) => {
             if (err) {
