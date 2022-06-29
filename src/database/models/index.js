@@ -64,6 +64,9 @@ const responseSchema = new Schema({
   gps: { type: Object, required: true },
   answers: { type: Array, required: true },
   region: { type: Object, required: true },
+  person: { type: String, required: true },
+  response: { type: String, required: true },
+  prefix_id: { type: Number, required: true },
 });
 
 /** Modules created Under a sector (For example Registration Module) */

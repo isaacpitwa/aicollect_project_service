@@ -21,42 +21,39 @@ class ResponseController {
       console.log('Logging Request Body => ', req.body);
       const { fields } = req.body;
       delete req.body.fields;
-      const response = new responseModel({
-        _id: mongoose.Types.ObjectId(),
-        ...req.body
-      });
-      response.save(async (err, saved) => {
-        if (err) {
-          return Response.badRequestError(res, 'Please check that all the fields are right');
-        }
-        fields.map((field) => {
-          fieldResponseModel
-            .findOne({ region: field.region })
-            .sort('-prefix_id') // give me the max
-            .exec(async (err, maxField) => {
-              if (err) {
-                console.log('Error Fetching Max Field: ', err);
-              }
-              console.log('=> New Field To be added: ', field);
-              const newField = new fieldResponseModel({
-                _id: mongoose.Types.ObjectId(),
-                ...field,
-                response: saved._id,
-                prefix_id: maxField ? maxField.prefix_id + 1 : 1,
-              });
-              console.log('=> New Field To be added: ', newField);
-              await newField.save((error, savedField) => {
-                if (error) {
-                  console.log('Field Record Response Logger => ', error);
-                }
-              });
+
+      responseModel
+        .findOne({ 'region.prefix': req.body.region.prefix })
+        .sort('-prefix_id') // give me the max
+        .exec(async (err, maxField) => {
+          if (err) {
+            console.log('Error Fetching Max Field: ', err);
+          }
+          const response = new responseModel({
+            _id: mongoose.Types.ObjectId(),
+            ...req.body
+          });
+          response.save(async (err, saved) => {
+            if (err) {
+              return Response.badRequestError(res, 'Please check that all the fields are right');
+            }
+            const formattedFields = fields.map((field) => {
+              field.code = `${field.region.prefix}${String(maxField ? maxField.prefix_id + 1 : 1).padStart(5, '0')}`;
+              field.response = saved._id;
+              field._id = mongoose.Types.ObjectId();
+              return field;
             });
-          return field;
+
+            fieldResponseModel.insertMany(formattedFields, (err, docs) => {
+              if (err) {
+                console.log('Field Recordd Response Logger => ', err);
+              }
+            });
+            return Response.customResponse(res, 201, 'Response submited successfully', saved);
+          });
         });
-        return Response.customResponse(res, 201, 'Response submited successfully', saved);
-      });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
