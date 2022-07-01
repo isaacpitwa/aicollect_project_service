@@ -40,7 +40,7 @@ class ResponseController {
             }
             const formattedFields = fields.map((field, index) => {
               console.log('Logging Request Body => ', field.region);
-              field.code = `${field.region.prefix}-${String(maxField ? maxField.prefix_id + 1 : 1).padStart(5, '0')}`;
+              field.code = `${field.region.prefix.toUpperCase()}-${String(maxField ? maxField.prefix_id + 1 : 1).padStart(5, '0')}`;
               field.response = saved._id;
               field.name = `Field ${index + 1}`;
               field._id = mongoose.Types.ObjectId();
