@@ -38,10 +38,11 @@ class ResponseController {
               console.log('Error Saving Response: ', err);
               return Response.badRequestError(res, 'Please check that all the fields are right');
             }
-            const formattedFields = fields.map((field) => {
+            const formattedFields = fields.map((field, index) => {
               console.log('Logging Request Body => ', field.region);
               field.code = `${field.region.prefix}${String(maxField ? maxField.prefix_id + 1 : 1).padStart(5, '0')}`;
               field.response = saved._id;
+              field.index = `Field ${index + 1}`;
               field._id = mongoose.Types.ObjectId();
               return field;
             });
