@@ -124,6 +124,7 @@ const fieldResponseSchema = new Schema({
   person: { type: String, required: true },
   response: { type: String, required: true },
   code: { type: String, required: true },
+  name: { type: String, required: true },
 });
 
 const userModel = model('User', userschema);
