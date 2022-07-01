@@ -22,7 +22,7 @@ class ResponseController {
       delete req.body.fields;
 
       responseModel
-        .findOne({ 'region.prefix': req.body.region.prefix })
+        .findOne({ form: req.body.form })
         .sort('-prefix_id') // give me the max
         .exec(async (err, maxField) => {
           if (err) {
