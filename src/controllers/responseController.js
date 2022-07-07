@@ -1,6 +1,8 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 import mongoose from 'mongoose';
 import mongooseModels from '../database/models';
+import uploadImage from '../utils/cloudinary';
 import Response from '../utils/response';
 
 const { responseModel, fieldResponseModel } = mongooseModels;
@@ -17,10 +19,24 @@ class ResponseController {
   static async createResponse(req, res, next) {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
+      for (let i = 0; i < req.answers.length; i += 1) {
+        for (let j = 0; j < req.answers.components.length; j += 1) {
+          if (req.answers[i].components[j].type === 'image' && req.answers[i].components[j].value) {
+            req.answers[i].components[j].value = await uploadImage(req.answers.components[j].value, 'aicollect_responses');
+          }
+          if (req.answers[i].components[j].type === 'sub-section') {
+            for (let z = 0; z < req.answers[i].components[j].components.length; z += 1) {
+              if (req.answers[i].components[j].components[z].type === 'image' && req.answers[i].components[j].components[z].value) {
+                req.answers[i].components[j].components[z].value = await uploadImage(req.answers.components[j].components[z].value, 'aicollect_responses');
+              }
+            }
+          }
+        }
+      }
+
       // UPLOAD PRESET ==> aicollect_field_responses
       const { fields } = req.body;
       delete req.body.fields;
-
       responseModel
         .findOne({ form: req.body.form })
         .sort('-prefix_id') // give me the max
