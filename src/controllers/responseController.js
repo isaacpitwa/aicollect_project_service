@@ -34,7 +34,6 @@ class ResponseController {
           }
         }
       }
-
       // UPLOAD PRESET ==> aicollect_field_responses
       const { fields } = req.body;
       delete req.body.fields;

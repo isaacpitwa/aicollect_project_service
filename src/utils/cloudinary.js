@@ -25,6 +25,7 @@ const uploadImage = async (base64Image, uploadPreset) => {
     );
     return uploadResponse;
   } catch (error) {
+    console.log('Error uploading image to cloudinary: ', error);
     throw error;
   }
 };
