@@ -23,12 +23,12 @@ class ResponseController {
       for (let i = 0; i < answers.length; i += 1) {
         for (let j = 0; j < answers[i].components.length; j += 1) {
           if (answers[i].components[j].type === 'image' && answers[i].components[j].value) {
-            answers[i].components[j].value = await uploadImage(answers.components[j].value, 'aicollect_responses');
+            answers[i].components[j].value = await uploadImage(answers[i].components[j].value, 'aicollect_responses');
           }
           if (answers[i].components[j].type === 'sub-section') {
             for (let z = 0; z < answers[i].components[j].components.length; z += 1) {
               if (answers[i].components[j].components[z].type === 'image' && answers[i].components[j].components[z].value) {
-                answers[i].components[j].components[z].value = await uploadImage(answers.components[j].components[z].value, 'aicollect_responses');
+                answers[i].components[j].components[z].value = await uploadImage(answers[i].components[j].components[z].value, 'aicollect_responses');
               }
             }
           }
