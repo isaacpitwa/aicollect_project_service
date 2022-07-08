@@ -30,7 +30,8 @@ class ResponseController {
           if (answers[i].components[j].type === 'sub-section') {
             for (let z = 0; z < answers[i].components[j].components.length; z += 1) {
               if (answers[i].components[j].components[z].type === 'image' && answers[i].components[j].components[z].value) {
-                answers[i].components[j].components[z].value = await uploadImage(answers[i].components[j].components[z].value, 'aicollect_responses');
+                const uploadResponse = await uploadImage(answers[i].components[j].components[z].value, 'aicollect_responses');
+                answers[i].components[j].components[z].value = uploadResponse.url;
               }
             }
           }
