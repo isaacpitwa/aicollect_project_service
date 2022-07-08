@@ -19,15 +19,16 @@ class ResponseController {
   static async createResponse(req, res, next) {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
-      for (let i = 0; i < req.answers.length; i += 1) {
-        for (let j = 0; j < req.answers.components.length; j += 1) {
-          if (req.answers[i].components[j].type === 'image' && req.answers[i].components[j].value) {
-            req.answers[i].components[j].value = await uploadImage(req.answers.components[j].value, 'aicollect_responses');
+      const { answers } = req.body;
+      for (let i = 0; i < answers.length; i += 1) {
+        for (let j = 0; j < answers.components.length; j += 1) {
+          if (answers[i].components[j].type === 'image' && answers[i].components[j].value) {
+            answers[i].components[j].value = await uploadImage(answers.components[j].value, 'aicollect_responses');
           }
-          if (req.answers[i].components[j].type === 'sub-section') {
-            for (let z = 0; z < req.answers[i].components[j].components.length; z += 1) {
-              if (req.answers[i].components[j].components[z].type === 'image' && req.answers[i].components[j].components[z].value) {
-                req.answers[i].components[j].components[z].value = await uploadImage(req.answers.components[j].components[z].value, 'aicollect_responses');
+          if (answers[i].components[j].type === 'sub-section') {
+            for (let z = 0; z < answers[i].components[j].components.length; z += 1) {
+              if (answers[i].components[j].components[z].type === 'image' && answers[i].components[j].components[z].value) {
+                answers[i].components[j].components[z].value = await uploadImage(answers.components[j].components[z].value, 'aicollect_responses');
               }
             }
           }
