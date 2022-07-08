@@ -19,10 +19,9 @@ class ResponseController {
   static async createResponse(req, res, next) {
     try {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
-      console.log(req.body);
       const { answers } = req.body;
       for (let i = 0; i < answers.length; i += 1) {
-        for (let j = 0; j < answers.components.length; j += 1) {
+        for (let j = 0; j < answers[i].components.length; j += 1) {
           if (answers[i].components[j].type === 'image' && answers[i].components[j].value) {
             answers[i].components[j].value = await uploadImage(answers.components[j].value, 'aicollect_responses');
           }
