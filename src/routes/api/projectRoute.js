@@ -28,6 +28,11 @@ router
   .route('/projects/userProjects')
   .post(verify, Access.accessToProjects, ProjectController.getUserProjects)
   .all(method);
+
+router
+  .route('/projects/deleteUser')
+  .get(verify, ProjectController.deleteUserFromProjects)
+  .all(method);
 router
   .route('/projects/update')
   .post(verify, ProjectController.updateProject)
