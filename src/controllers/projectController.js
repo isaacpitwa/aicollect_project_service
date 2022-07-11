@@ -217,6 +217,26 @@ class ProjectController {
   }
 
   /**
+   * Helper controller function to update Projects by deleting User from Projects
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {function} next Express Next Function
+   * @returns {object} Response from Update Project Endpoint
+   */
+  static async deleteUserFromProjects(req, res, next) {
+    try {
+      projectModel.updateMany({ 'projectTeam.userId': req.body.userId }, { $pull: { projectTeam: { userId: req.body.userId } } }, (err, data) => {
+        if (err) {
+          return Response.badRequestError(res, 'Could not update project');
+        }
+        return Response.customResponse(res, 200, 'Project updated successfully', data);
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
    * Helper controller function to delete Projects
    * @param {object} req Express Request
    * @param {object} res Express Response
