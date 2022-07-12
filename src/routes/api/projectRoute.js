@@ -26,12 +26,12 @@ router
   .all(method);
 router
   .route('/projects/userProjects')
-  .post(Access.accessToProjects, ProjectController.getUserProjects)
+  .post(verify, Access.accessToProjects, ProjectController.getUserProjects)
   .all(method);
 
 router
   .route('/projects/deleteUser')
-  .post(verify, ProjectController.deleteUserFromProjects)
+  .post(ProjectController.deleteUserFromProjects)
   .all(method);
 router
   .route('/projects/update')
