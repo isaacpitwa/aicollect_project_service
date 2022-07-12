@@ -31,7 +31,7 @@ router
 
 router
   .route('/projects/deleteUser')
-  .get(verify, ProjectController.deleteUserFromProjects)
+  .post(verify, ProjectController.deleteUserFromProjects)
   .all(method);
 router
   .route('/projects/update')
