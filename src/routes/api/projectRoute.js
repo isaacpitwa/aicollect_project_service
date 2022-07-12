@@ -26,7 +26,7 @@ router
   .all(method);
 router
   .route('/projects/userProjects')
-  .post(verify, Access.accessToProjects, ProjectController.getUserProjects)
+  .post(Access.accessToProjects, ProjectController.getUserProjects)
   .all(method);
 
 router
