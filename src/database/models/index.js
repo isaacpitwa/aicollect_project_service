@@ -10,9 +10,10 @@ const userschema = new Schema({
 /** Sectors created by Super Admin User (Users register under a specific sector) */
 const sectorschema = new Schema({
   id: { type: Number, trim: true },
-  title: { type: String, required: true }
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  status: { type: Boolean, required: true, default: false },
 });
-
 /** Projects created by Clients (Users)
  * Project Owner is the First User created (Client)
  */
@@ -24,6 +25,7 @@ const projectschema = new Schema({
   isDeleted: { type: Boolean, default: false },
   projectTeam: { type: Array, default: [] },
   projectOwner: { type: String, default: [] },
+  sector: { type: Types.ObjectId, ref: 'Sector' }
 }, { timestamps: true });
 
 /** Questionaires Created by the CLients */
@@ -72,7 +74,8 @@ const responseSchema = new Schema({
 const moduleschema = new Schema({
   id: { type: Number, trim: true },
   type: { type: String, required: true },
-  moduleName: { type: String, required: true }
+  moduleName: { type: String, required: true },
+  sector: { type: Types.ObjectId, ref: 'Sector' }
 });
 
 /** Tasks created under a project */
