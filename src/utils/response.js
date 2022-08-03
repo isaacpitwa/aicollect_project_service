@@ -88,6 +88,21 @@ class Response {
       error: 'Bad Request'
     });
   }
+
+  /**
+   * Retuns a authorization error response
+   * @param {object} res  details.
+   * @param {string} message  details.
+   * @param {object} data  details.
+   * @returns {object}.
+   */
+  static authorizationError(res, message) {
+    return res.status(403).json({
+      status: 403,
+      message,
+      error: 'Authorization Error'
+    });
+  }
 }
 
 export default Response;

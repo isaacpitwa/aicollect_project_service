@@ -19,9 +19,8 @@ const app = express();
 app.enable('trust proxy');
 app.use(cors());
 app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb', parameterLimit: 50000 }));
 app.use(session({
   store: '',
   secret: 'secret',
@@ -37,6 +36,16 @@ let MONGO_URI;
 let mongoConfigObject;
 
 if (process.env.NODE_ENV === 'production') {
+  MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@db-mongodb-fra1-40589-c19b3827.mongo.ondigitalocean.com/aicollect_test?retryWrites=true&w=majority&authSource=admin`;
+  mongoConfigObject = {
+    keepAlive: true,
+    keepAliveInitialDelay: 300000,
+    useNewUrlParser: true,
+    tlsInsecure: true,
+    useUnifiedTopology: true
+  };
+  // MONGO_URI = 'mongodb://64.227.187.135:27017/aicollect';
+=======
   // MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@aicollect.1flh1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
   // mongoConfigObject = {
   //   user: process.env.MONGO_USER,

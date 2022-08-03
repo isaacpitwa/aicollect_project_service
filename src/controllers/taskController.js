@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
-const { taskModel, formModel } = mongooseModels;
+const { taskModel, formModel, fieldModel } = mongooseModels;
 
 /** class representing Task Controller */
 class TaskController {
@@ -89,9 +89,24 @@ class TaskController {
       const forms = await formModel.find({
         _id: [...list]
       });
+
+      // List of Field Forms
+      const fieldList = [];
+      for (let i = 0; i < tasks.length; i++) {
+        tasks[i].fieldForm.forEach(async (fieldForm) => {
+          fieldList.push(fieldForm);
+        });
+      }
+
+      // Find all questionaires with provided IDS
+      const fieldForms = await fieldModel.find({
+        _id: [...fieldList]
+      });
+
       const tasksWithQuestionaires = {
         tasks,
-        forms
+        forms,
+        fieldForms
       };
       return Response.customResponse(
         res, 200,
@@ -113,8 +128,8 @@ class TaskController {
   static async createTask(req, res, next) {
     try {
       const {
-        title,
-        taskType, description, startDate, dueDate, schedule, team, questionaire, project, createdBy
+        title, taskType, description, startDate,
+        dueDate, schedule, team, questionaire, project, createdBy, fieldForm
       } = req.body;
       const task = new taskModel({
         _id: mongoose.Types.ObjectId(),
@@ -126,6 +141,7 @@ class TaskController {
         schedule,
         team,
         questionaire,
+        fieldForm,
         project,
         createdBy
       });
