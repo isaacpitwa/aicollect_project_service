@@ -14,9 +14,7 @@ const sectorschema = new Schema({
   description: { type: String, required: true },
   modules: [{ type: Types.ObjectId, ref: 'module' }],
   status: { type: Boolean, required: true, default: false },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+}, { timestamps: true });
 /** Projects created by Clients (Users)
  * Project Owner is the First User created (Client)
  */
@@ -79,9 +77,7 @@ const moduleschema = new Schema({
   type: { type: String, required: true },
   moduleName: { type: String, required: true },
   sector: { type: Types.ObjectId, ref: 'Sector' },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
+}, { timestamps: true });
 
 /** Tasks created under a project */
 const taskSchema = new Schema({
