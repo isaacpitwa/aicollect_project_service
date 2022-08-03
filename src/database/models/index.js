@@ -12,6 +12,7 @@ const sectorschema = new Schema({
   id: { type: Number, trim: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
+  modules: [{ type: Types.ObjectId, ref: 'module' }],
   status: { type: Boolean, required: true, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
