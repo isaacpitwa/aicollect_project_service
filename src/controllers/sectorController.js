@@ -43,7 +43,7 @@ class SectorController {
    */
   static async getSectors(req, res, next) {
     try {
-      const sectors = await SectorService.getSectors();
+      const sectors = await sectorModel.find();
       return Response.customResponse(res, 200, 'Sectors retreived successfully', sectors);
     } catch (error) {
       return next(error);
