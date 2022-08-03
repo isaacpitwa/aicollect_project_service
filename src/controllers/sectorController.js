@@ -78,12 +78,11 @@ class SectorController {
    */
   static async deleteSector(req, res, next) {
     try {
-      const sectorExists = await SectorService.findSectorById(req.params.sectorId);
+      const sectorExists = await sectorModel.find({ _id: req.params.sectorId }).remove();
       if (!sectorExists) {
         return Response.notFoundError(res, 'Sector with provided id does not exist');
       }
-      const deleted = await SectorService.deleteSector(sectorExists.id);
-      return Response.customResponse(res, 200, 'Sector successfully deleted', deleted);
+      return Response.customResponse(res, 200, 'Sector successfully deleted', sectorExists);
     } catch (error) {
       return next(error);
     }
@@ -96,15 +95,14 @@ class SectorController {
    * @param {*} next Express Next Function
    * @returns {object} Response from the Disable / Enable sector Endpoint
    */
-  static async changeSectorState(req, res, next) {
+  static async updateSector(req, res, next) {
     try {
-      const { status, sectorId } = req.body;
-      const sectorExists = await SectorService.findSectorById(sectorId);
-      if (!sectorExists) {
-        return Response.notFoundError('Sector with provided ID does not exist');
-      }
-      const changedSector = await SectorService.changeSectorStatus(status, sectorId);
-      return Response.customResponse(res, 200, 'Sector status changed successfully', changedSector);
+      const { sectorId } = req.body;
+      req.body.updatedAt = Date.now();
+      const updateForm = await sectorModel.findOneAndUpdate({
+        _id: sectorId,
+      }, req.body, { new: true });
+      return Response.customResponse(res, 200, 'Form Updated successfully', updateForm);
     } catch (error) {
       return next(error);
     }
