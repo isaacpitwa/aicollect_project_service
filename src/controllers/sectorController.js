@@ -59,7 +59,7 @@ class SectorController {
    */
   static async getOneSector(req, res, next) {
     try {
-      const sectorExists = await SectorService.findSectorById(req.params.sectorId);
+      const sectorExists = await sectorModel.find({ _id: req.params.sectorId });
       if (!sectorExists) {
         return Response.notFoundError(res, 'Sector with provided id does not exist');
       }
