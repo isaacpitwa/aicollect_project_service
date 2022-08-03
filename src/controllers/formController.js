@@ -38,6 +38,7 @@ class FormController {
   static async updateForm(req, res, next) {
     try {
       const { formModel } = mongooseModels;
+      req.body.updatedAt = Date.now();
       const updateForm = await formModel.findOneAndUpdate({
         _id: req.body.formId
       }, req.body, { new: true });
@@ -157,6 +158,7 @@ class FormController {
    */
   static async updateQuestionaireTemplate(req, res, next) {
     try {
+      req.body.updatedAt = Date.now();
       const updateForm = await templateModel.findOneAndUpdate({
         _id: req.body.templateId
       }, req.body, { new: true });

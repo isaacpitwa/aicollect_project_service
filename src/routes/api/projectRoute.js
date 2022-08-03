@@ -3,9 +3,13 @@ import ProjectController from '../../controllers/projectController';
 import TaskController from '../../controllers/taskController';
 import FormController from '../../controllers/formController';
 import ResponseController from '../../controllers/responseController';
+import SectorController from '../../controllers/sectorController';
+
 import verify from '../../middleware/auth';
 // import ProjectValidator from '../../validations/projectValidations';
 import method from '../../utils/method';
+import Access from '../../middleware/userRoles';
+import FieldController from '../../controllers/fieldController';
 
 const router = express.Router();
 
@@ -24,7 +28,12 @@ router
   .all(method);
 router
   .route('/projects/userProjects')
-  .post(verify, ProjectController.getUserProjects)
+  .post(verify, Access.accessToProjects, ProjectController.getUserProjects)
+  .all(method);
+
+router
+  .route('/projects/deleteUser')
+  .post(ProjectController.deleteUserFromProjects)
   .all(method);
 router
   .route('/projects/update')
@@ -105,6 +114,54 @@ router
 router
   .route('/forms/submit/new-response')
   .post(verify, ResponseController.createResponse)
+  .all(method);
+
+// Field Registartion Forms
+router
+  .route('/fields/forms')
+  .post(verify, FieldController.getUserFieldForms)
+  .all(method);
+
+router
+  .route('/fields/create/newField')
+  .post(verify, FieldController.createFieldForm)
+  .all(method);
+
+router
+  .route('/fields/update')
+  .post(verify, FieldController.updateFieldForm)
+  .all(method);
+
+router
+  .route('/fields/:fieldFormId')
+  .get(verify, FieldController.getFieldFormDetails)
+  .all(method);
+
+router
+  .route('/fields/responses/:fieldFormId')
+  .get(verify, FieldController.getFieldFormResponses)
+  .all(method);
+
+/** PROJECT SECTORS ROUTES */
+router
+  .route('/sectors')
+  .get(SectorController.getSectors)
+  .all(method);
+router
+  .route('/sectors/create')
+  .post(verify, Access.accessToEditAndCreateSectors, SectorController.createSector)
+  .all(method);
+router
+  .route('/sectors/:sectorId')
+  .get(verify, SectorController.getOneSector)
+  .all(method);
+router
+  .route('/sectors/delete/:sectorId')
+  .delete(verify, Access.accessToEditAndCreateSectors, SectorController.deleteSector)
+  .all(method);
+router
+  .route('/sectors/update/change_state')
+  .put(verify, Access.accessToEditAndCreateSectors, SectorController.updateSector)
   .all(method);
 
 export default router;

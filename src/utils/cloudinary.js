@@ -20,11 +20,12 @@ cloudinary.config({
 const uploadImage = async (base64Image, uploadPreset) => {
   try {
     const uploadResponse = await cloudinary.uploader.upload(
-      base64Image,
+      `data:image/jpeg;base64,${base64Image}`,
       { upload_preset: uploadPreset }
     );
     return uploadResponse;
   } catch (error) {
+    console.log('Error uploading image to cloudinary: ', error);
     throw error;
   }
 };

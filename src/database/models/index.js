@@ -10,9 +10,14 @@ const userschema = new Schema({
 /** Sectors created by Super Admin User (Users register under a specific sector) */
 const sectorschema = new Schema({
   id: { type: Number, trim: true },
-  title: { type: String, required: true }
-});
-
+  title: {
+    type: String, required: true, unique: true, trim: true
+  },
+  description: { type: String, required: true },
+  modules: [{ type: Types.ObjectId, ref: 'module' }],
+  createdBy: userschema,
+  status: { type: Boolean, required: true, default: false },
+}, { timestamps: true });
 /** Projects created by Clients (Users)
  * Project Owner is the First User created (Client)
  */
@@ -24,6 +29,7 @@ const projectschema = new Schema({
   isDeleted: { type: Boolean, default: false },
   projectTeam: { type: Array, default: [] },
   projectOwner: { type: String, default: [] },
+  sector: { type: Types.ObjectId, ref: 'Sector' }
 }, { timestamps: true });
 
 /** Questionaires Created by the CLients */
@@ -62,15 +68,19 @@ const responseSchema = new Schema({
   submittedOn: { type: Date, required: true },
   timeSpentToSubmit: { type: String, required: true },
   gps: { type: Object, required: true },
-  answers: { type: Array, required: true }
+  answers: { type: Array, required: true },
+  region: { type: Object, required: true },
+  person: { type: String, required: true },
+  prefix_id: { type: Number, required: true },
 });
 
 /** Modules created Under a sector (For example Registration Module) */
 const moduleschema = new Schema({
   id: { type: Number, trim: true },
   type: { type: String, required: true },
-  moduleName: { type: String, required: true }
-});
+  moduleName: { type: String, required: true },
+  sector: { type: Types.ObjectId, ref: 'Sector' },
+}, { timestamps: true });
 
 /** Tasks created under a project */
 const taskSchema = new Schema({
@@ -84,12 +94,44 @@ const taskSchema = new Schema({
   schedule: { type: Array, default: [] },
   team: { type: Array, default: [] },
   questionaire: { type: Array, required: true, default: [] },
+  fieldForm: { type: Array, required: true, default: [] },
   rescheduled: { type: Boolean, required: true, default: false },
   completed: { type: Boolean, required: true, default: false },
   priority: { type: String, required: true, default: 'Normal' },
   dateCompleted: { type: Date, default: null },
   status: { type: String, required: true, default: 'Draft' },
   createdBy: userschema,
+});
+
+/** field Registrations created under a  Questionaire */
+const fieldSchema = new Schema({
+  name: { type: String, required: true },
+  version: { type: Number, required: true },
+  createdBy: userschema,
+  clientId: { type: Number, required: true },
+  projectId: { type: String },
+  formType: { type: String },
+  module: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  status: { type: Boolean, required: true, default: false },
+  formFields: { type: Array, default: [] },
+});
+
+/** Responses submitted against the questionaires */
+const fieldResponseSchema = new Schema({
+  questionaire: { type: String, required: true },
+  fieldForm: { type: String, required: true },
+  submittedBy: userschema,
+  submittedOn: { type: Date, required: true },
+  timeSpentToSubmit: { type: String, required: true },
+  gps: { type: Object, required: true },
+  answers: { type: Array, required: true },
+  region: { type: Object, required: true },
+  person: { type: String, required: true },
+  response: { type: String, required: true },
+  code: { type: String, required: true },
+  name: { type: String, required: true },
 });
 
 const userModel = model('User', userschema);
@@ -100,6 +142,8 @@ const formModel = model('Questionaire', formSchema);
 const responseModel = model('Response', responseSchema);
 const taskModel = model('Task', taskSchema);
 const templateModel = model('Template', templateSchema);
+const fieldModel = model('Field', fieldSchema);
+const fieldResponseModel = model('FieldResponse', fieldResponseSchema);
 
 const mongooseModels = {
   userModel,
@@ -109,7 +153,9 @@ const mongooseModels = {
   formModel,
   responseModel,
   taskModel,
-  templateModel
+  templateModel,
+  fieldModel,
+  fieldResponseModel
 };
 
 export default mongooseModels;
