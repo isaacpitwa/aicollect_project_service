@@ -153,7 +153,7 @@ router
   .all(method);
 router
   .route('/sectors/:sectorId')
-  .get(SectorController.getOneSector)
+  .get(verify, SectorController.getOneSector)
   .all(method);
 router
   .route('/sectors/delete/:sectorId')
@@ -161,7 +161,7 @@ router
   .all(method);
 router
   .route('/sectors/update/change_state')
-  .put(verify, Access.accessToEditAndCreateSectors, SectorController.changeSectorState)
+  .put(verify, Access.accessToEditAndCreateSectors, SectorController.updateSector)
   .all(method);
 
 export default router;
