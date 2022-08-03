@@ -73,22 +73,6 @@ class ProjectController {
       if (!req.body.clientId) {
         return Response.badRequestError(res, 'Please provide a valid user id');
       }
-      // Check for projects from Redis server before hitting up the server
-      // redisConnection.get('projects', async (err, projects) => {
-      //   if (err) {
-      //     return Response.badRequestError(res, 'Error occured when connecting to redis server');
-      //   }
-      //   if (projects) {
-      //     return Response.customResponse(
-      // res, 200, 'Projects retreved from cache', JSON.parse(projects));
-      //   }
-      //   const projectsFromDB = await mongooseModels.projectModel.find({
-      //     projectOwner: req.body.clientId
-      //   });
-      //   redisConnection.setex('projects', 1440, JSON.stringify(projectsFromDB));
-      //   return Response.customResponse(res,
-      // 200, 'Projects retrieved successfully', projectsFromDB);
-      // });
       const { roles, id, } = req.user;
       let projects;
       if (['Owner', 'Admin'].includes(roles)) {
@@ -96,7 +80,7 @@ class ProjectController {
       } else if (roles === 'Supervisor') {
         projects = await mongooseModels.projectModel.find({
           'projectTeam.supervisor': id
-        });
+        }).populate('sector').populate('modules');
         projects = projects.map(
           (project) => {
             project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);

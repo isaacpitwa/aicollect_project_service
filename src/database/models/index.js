@@ -13,6 +13,8 @@ const sectorschema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   status: { type: Boolean, required: true, default: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 /** Projects created by Clients (Users)
  * Project Owner is the First User created (Client)
@@ -75,7 +77,9 @@ const moduleschema = new Schema({
   id: { type: Number, trim: true },
   type: { type: String, required: true },
   moduleName: { type: String, required: true },
-  sector: { type: Types.ObjectId, ref: 'Sector' }
+  sector: { type: Types.ObjectId, ref: 'Sector' },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 /** Tasks created under a project */
