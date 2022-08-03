@@ -45,12 +45,24 @@ if (process.env.NODE_ENV === 'production') {
     useUnifiedTopology: true
   };
   // MONGO_URI = 'mongodb://64.227.187.135:27017/aicollect';
+=======
+  // MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@aicollect.1flh1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
   // mongoConfigObject = {
+  //   user: process.env.MONGO_USER,
+  //   pass: process.env.MONGO_PASS,
   //   keepAlive: true,
   //   keepAliveInitialDelay: 300000,
   //   useNewUrlParser: true,
+  //   // useCreateIndex: true,
   //   useUnifiedTopology: true
   // };
+  MONGO_URI = 'mongodb://64.227.187.135:27017/aicollect';
+  mongoConfigObject = {
+    keepAlive: true,
+    keepAliveInitialDelay: 300000,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  };
 } else {
   MONGO_URI = 'mongodb://localhost:27017/aicollect';
   mongoConfigObject = {
