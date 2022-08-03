@@ -10,7 +10,8 @@ const userschema = new Schema({
 /** Sectors created by Super Admin User (Users register under a specific sector) */
 const sectorschema = new Schema({
   id: { type: Number, trim: true },
-  title: { type: String, required: true },
+  title: {
+    type: String, required: true, unique: true, trim: true},
   description: { type: String, required: true },
   modules: [{ type: Types.ObjectId, ref: 'module' }],
   status: { type: Boolean, required: true, default: false },
