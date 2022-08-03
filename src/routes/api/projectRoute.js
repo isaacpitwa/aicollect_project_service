@@ -3,6 +3,8 @@ import ProjectController from '../../controllers/projectController';
 import TaskController from '../../controllers/taskController';
 import FormController from '../../controllers/formController';
 import ResponseController from '../../controllers/responseController';
+import SectorController from '../../controllers/sectorController';
+
 import verify from '../../middleware/auth';
 // import ProjectValidator from '../../validations/projectValidations';
 import method from '../../utils/method';
@@ -138,6 +140,28 @@ router
 router
   .route('/fields/responses/:fieldFormId')
   .get(verify, FieldController.getFieldFormResponses)
+  .all(method);
+
+/** PROJECT SECTORS ROUTES */
+router
+  .route('/sectors')
+  .get(SectorController.getSectors)
+  .all(method);
+router
+  .route('/sectors/create')
+  .post(verify, Access.accessToEditAndCreateSectors, SectorController.createSector)
+  .all(method);
+router
+  .route('/sectors/:sectorId')
+  .get(SectorController.getOneSector)
+  .all(method);
+router
+  .route('/sectors/delete/:sectorId')
+  .delete(verify, Access.accessToEditAndCreateSectors, SectorController.deleteSector)
+  .all(method);
+router
+  .route('/sectors/update/change_state')
+  .put(verify, Access.accessToEditAndCreateSectors, SectorController.changeSectorState)
   .all(method);
 
 export default router;

@@ -33,6 +33,22 @@ class Access {
     }
     next();
   }
+
+  /**
+   * @description Middleware function to check if user is allowed to modify Sectors
+   * @param {object} req Express Request
+   * @param {object} res Express Response
+   * @param {funtion} next Express Next Function
+   * @returns {object} Response if user is allowed to modify sector
+   */
+  static async accessToEditAndCreateSectors(req, res, next) {
+    const { roles } = req.user;
+    const allowedRoles = ['Owner', 'Admin'];
+    if (allowedRoles.includes(roles) === false) {
+      return Response.authorizationError(res, 'You are not allowed to perform this task');
+    }
+    next();
+  }
 }
 
 export default Access;
