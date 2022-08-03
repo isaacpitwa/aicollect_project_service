@@ -11,9 +11,11 @@ const userschema = new Schema({
 const sectorschema = new Schema({
   id: { type: Number, trim: true },
   title: {
-    type: String, required: true, unique: true, trim: true},
+    type: String, required: true, unique: true, trim: true
+  },
   description: { type: String, required: true },
   modules: [{ type: Types.ObjectId, ref: 'module' }],
+  createdBy: userschema,
   status: { type: Boolean, required: true, default: false },
 }, { timestamps: true });
 /** Projects created by Clients (Users)

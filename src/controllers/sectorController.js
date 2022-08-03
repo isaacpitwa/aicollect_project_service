@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import mongooseModels from '../database/models';
 import Response from '../utils/response';
 
@@ -14,13 +15,20 @@ class SectorController {
    */
   static async createSector(req, res, next) {
     try {
-      const rawData = req.body;
-      const sectorExists = await SectorService.findSectorByName(rawData.title);
-      if (sectorExists) {
-        return Response.conflictError(res, `Sector with name ${rawData.title} already exists`);
-      }
-      const data = await SectorService.createSector(rawData);
-      return Response.customResponse(res, 201, 'Sector has been created successfully', data);
+      const { title, description, createdBy } = req.body;
+      const newsector = new sectorModel({
+        _id: mongoose.Types.ObjectId(),
+        title,
+        description,
+        modules: [],
+        createdBy,
+      });
+      newsector.save((error, saved) => {
+        if (error) {
+          return Response.badRequestError(res, 'Sector could not be created');
+        }
+        return Response.customResponse(res, 201, 'Sector created successfully', saved);
+      });
     } catch (error) {
       return next(error);
     }
