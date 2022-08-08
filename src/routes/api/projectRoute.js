@@ -153,7 +153,7 @@ router
   .all(method);
 router
   .route('/sectors/:sectorId')
-  .get(verify, SectorController.getOneSector)
+  .get(verify, Access.accessToEditAndCreateSectors, SectorController.getOneSector)
   .all(method);
 router
   .route('/sectors/delete/:sectorId')
