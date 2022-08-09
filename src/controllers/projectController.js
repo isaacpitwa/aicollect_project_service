@@ -80,7 +80,7 @@ class ProjectController {
       } else if (roles === 'Supervisor') {
         projects = await mongooseModels.projectModel.find({
           'projectTeam.supervisor': id
-        });
+        }).populate('sector');
         projects = projects.map(
           (project) => {
             project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);
