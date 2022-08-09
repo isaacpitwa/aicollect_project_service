@@ -151,6 +151,7 @@ router
   .route('/sectors/create')
   .post(verify, Access.accessToEditAndCreateSectors, SectorController.createSector)
   .all(method);
+
 router
   .route('/sectors/:sectorId')
   .get(verify, SectorController.getOneSector)
