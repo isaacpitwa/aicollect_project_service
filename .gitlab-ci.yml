@@ -4,15 +4,18 @@ services:
   - docker:dind
 stages:
   - build_and_push
+  - pilot_build_and_push
   - deploy_staging
   - build_and_push_production
   - deploy_production
+  - deploy_pilot
 
 #2
 variables:
   REGISTRY: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service" 
   STAGING_IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service:staging"
   PRODUCTION_IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service:production"
+  PILOT_IMAGE_NAME: "registry.gitlab.com/new-aic-mvp2/backend/project-management-service:pilot"
 
 
 # before_script:
@@ -80,3 +83,37 @@ deploy_production:
   environment:
     name: Production 
     url: https://projects-api.aicollectapp.com
+
+
+
+#6
+pilot_build_and_push:
+  stage: pilot_build_and_push
+  before_script:  
+    - cat $PILOT_ENVIROMENT_FILE > .env.example_temp
+  only:
+    - pilot
+  script:
+    - docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}
+    - docker build -t  $PILOT_IMAGE_NAME .
+    - docker push $PILOT_IMAGE_NAME
+
+
+#7 
+deploy_pilot:
+  stage: deploy_pilot
+  # tags: 
+  #   - Deployment
+  #   - Staging
+  only:
+    - pilot
+  script:
+    - chmod og= $SSHKEY
+    - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker login $REGISTRY  --username ${DOCKER_USER} --password ${DOCKER_USER_PASSWORD}"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker  container stop aic_backendProjects_pilot || true && docker container  rm aic_backendProjects_pilot || true"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker pull  $PILOT_IMAGE_NAME"
+    - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker run -d -p 8014:4000 --restart always  --name aic_backendProjects_pilot  $PILOT_IMAGE_NAME"
+  environment:
+    name: Pilot 
+    url: https://projects-api-pilot.aicollectapp.com
