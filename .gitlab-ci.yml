@@ -90,7 +90,7 @@ deploy_production:
 pilot_build_and_push:
   stage: pilot_build_and_push
   before_script:  
-    - cat $PILOT_ENVIROMENT_FILE > .env.example_temp
+    - cat $PILOT_ENVIROMENT_FILE > .env_temp
   only:
     - pilot
   script:
