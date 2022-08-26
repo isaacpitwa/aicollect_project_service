@@ -24,8 +24,8 @@ variables:
 #4
 build_and_push:
   stage: build_and_push
-  # only:
-  #   - develop
+  only:
+    - develop
   before_script:  
     - cat $STAGING_ENVIROMENT_FILE > .env_temp
   script:
@@ -40,8 +40,8 @@ deploy_staging:
   # tags: 
   #   - Deployment
   #   - Staging
-  # only:
-  #   - develop
+  only:
+    - develop
   script:
     - chmod og= $SSHKEY
     - docker run --rm docker:git  apk update && docker run --rm docker:git  apk add openssh-client
