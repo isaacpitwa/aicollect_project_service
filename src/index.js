@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === 'production') {
 
 mongoose.connect(MONGO_URI, mongoConfigObject);
 mongoose.connection.on('connected', () => {
-  console.log('mongodb connected');
+  console.log('mongodb connected  successfully 🎉');
 });
 mongoose.connection.on('error', (error) => {
   console.log('Oooh, could not connect to mongo: \n', error);
