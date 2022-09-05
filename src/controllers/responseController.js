@@ -67,7 +67,7 @@ class ResponseController {
 
             fieldResponseModel.insertMany(formattedFields, (err, docs) => {
               if (err) {
-                console.log('Field Recordd Response Logger => ', err);
+                console.log('Field Record Response Logger => ', err);
               }
               console.log('Field Record Response Logger => ', docs);
             });
