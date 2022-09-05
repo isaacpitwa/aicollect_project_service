@@ -29,7 +29,6 @@ const projectschema = new Schema({
   isDeleted: { type: Boolean, default: false },
   projectTeam: { type: Array, default: [] },
   projectOwner: { type: String, default: [] },
-  sector: { type: Types.ObjectId, ref: 'Sector', default: null },
 }, { timestamps: true });
 
 /** Questionaires Created by the CLients */
