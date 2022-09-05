@@ -116,4 +116,4 @@ deploy_pilot:
     - ssh -i $SSHKEY  -o StrictHostKeyChecking=no $SERVER_USER@$STAGING_SERVER_HOST "docker run -d -p 8014:4000 --restart always  --name aic_backendProjects_pilot  $PILOT_IMAGE_NAME"
   environment:
     name: Pilot 
-    url: https://projects-api-pilot.aicollectapp.com
+    url: https://beersheba-projects-api.aicollectapp.com
