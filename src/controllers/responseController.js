@@ -91,11 +91,13 @@ class ResponseController {
       const { formId } = req.params;
       const { roles, id, } = req.user;
       let responses = [];
-      responses = await responseModel.find({ form: formId }).exec();
       if (roles === 'Supervisor') { 
         console.log('User Request is From Supervisor');
         responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id }).exec();
         console.log('Supervisor Data: ', responses);
+      }
+      else {
+        responses = await responseModel.find({ form: formId }).exec();
       }
       return Response.customResponse(res, 200, 'Responses retreived', responses);
     } catch (error) {
