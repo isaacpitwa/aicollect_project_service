@@ -93,7 +93,7 @@ class ResponseController {
       let responses = [];
       if (roles === 'Supervisor') { 
         console.log('User Request is From Supervisor');
-        responses = await responseModel.find({ form: formId, 'submittedBy.supervisor': id }).exec();
+        responses = await responseModel.find({ form: formId, submittedBy:{supervisor:id} }).exec();
         console.log('Supervisor Data: ', responses);
       }
       else {
