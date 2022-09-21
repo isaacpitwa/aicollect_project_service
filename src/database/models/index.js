@@ -63,7 +63,7 @@ const templateSchema = new Schema({
 /** Responses submitted against the questionaires */
 const responseSchema = new Schema({
   form: { type: String, required: true },
-  submittedBy: userschema,
+  submittedBy:  { type: Object, required: true },
   submittedOn: { type: Date, required: true },
   timeSpentToSubmit: { type: String, required: true },
   gps: { type: Object, required: true },
