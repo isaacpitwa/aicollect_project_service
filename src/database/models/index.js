@@ -4,7 +4,8 @@ import { Schema, model, Types } from 'mongoose';
 const userschema = new Schema({
   userId: { type: Number, required: true },
   name: { type: String, trim: true },
-  roles: { type: String, required: true }
+  roles: { type: String, required: true },
+  supervisor: { type: Number},
 });
 
 /** Sectors created by Super Admin User (Users register under a specific sector) */
@@ -63,7 +64,7 @@ const templateSchema = new Schema({
 /** Responses submitted against the questionaires */
 const responseSchema = new Schema({
   form: { type: String, required: true },
-  submittedBy:  { type: Object, required: true },
+  submittedBy: userschema,
   submittedOn: { type: Date, required: true },
   timeSpentToSubmit: { type: String, required: true },
   gps: { type: Object, required: true },
