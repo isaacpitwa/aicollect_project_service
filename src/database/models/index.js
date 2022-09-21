@@ -5,7 +5,7 @@ const userschema = new Schema({
   userId: { type: Number, required: true },
   name: { type: String, trim: true },
   roles: { type: String, required: true },
-  supervisor: { type: Number},
+  supervisor: { type: Number, required: true, default:null},
 });
 
 /** Sectors created by Super Admin User (Users register under a specific sector) */
