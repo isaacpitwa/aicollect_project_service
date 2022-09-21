@@ -17,6 +17,7 @@ class FieldController {
       const newForm = new fieldModel({ ...form });
       newForm.save((error, saved) => {
         if (error) {
+          console.log('create Field Form error: ',error)
           return Response.badRequestError(res, 'Something went wrong');
         }
         return Response.customResponse(res, 201, 'Form created successfully', saved);
