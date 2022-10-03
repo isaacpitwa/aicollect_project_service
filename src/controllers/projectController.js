@@ -75,23 +75,20 @@ class ProjectController {
       }
       const { roles, id, } = req.user;
       let projects;
-      if (['Owner', 'Admin'].includes(roles)) {
-        projects = await mongooseModels.projectModel.find({ projectOwner: req.body.clientId });
-        console.log("Fetched  Admin Projects: ", projects);
-      } else if (roles === 'Supervisor') {
+        if (roles === 'Supervisor') {
         projects = await mongooseModels.projectModel.find({
-          'projectTeam.supervisor': id
+          'team.supervisor': id
         });
         projects = projects.map(
           (project) => {
-            project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);
+            project.team = project.team.filter((member) => member.supervisor === id);
             return project;
           }
         );
         console.log("Fetched  Supervisor Projects: ", projects);
       } else {
-        projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
-        console.log("Fetched  Standard  User Projects: ", projects);
+        projects = await mongooseModels.projectModel.find({ client: req.body.clientId });
+        console.log("Fetched Projects: ", projects);
       }
 
       return Response.customResponse(res, 200, 'Projects retrieved successfully', projects);
