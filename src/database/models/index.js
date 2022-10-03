@@ -1,5 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
-import ProjectModel from './project';
+import projectModel from './project';
 
 /** Users, cloned from the Authentication Service */
 const userschema = new Schema({
@@ -149,7 +149,7 @@ const fieldResponseModel = model('FieldResponse', fieldResponseSchema);
 const mongooseModels = {
   userModel,
   sectorModel,
-  ProjectModel,
+  projectModel,
   moduleModel,
   formModel,
   responseModel,

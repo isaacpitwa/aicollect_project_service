@@ -26,7 +26,7 @@ class ProjectController {
         name,
         description,
         client,
-        projectOwner: clientId,
+        team:[],
         createdBy: { id: userId, name:userName, roles },
       });
       newProject.save((error, saved) => {
