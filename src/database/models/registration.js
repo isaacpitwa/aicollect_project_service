@@ -1,12 +1,5 @@
 import { Schema, model } from 'mongoose';
-/** Users, cloned from the Authentication Service */
-const userschema = new Schema({
-    userId: { type: Number, required: true },
-    name: { type: String, trim: true },
-    roles: { type: String, required: true },
-    supervisor: { type: Number, default:null},
-  });
-
+import { userschema } from './shared';
 const response ={
     _id: Schema.Types.ObjectId,
     questionaire: { 

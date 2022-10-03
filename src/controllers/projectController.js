@@ -31,6 +31,7 @@ class ProjectController {
       });
       newProject.save((error, saved) => {
         if (error) {
+          console.log("Error: ", error);
           return Response.badRequestError(res, 'Project could not be created');
         }
         return Response.customResponse(res, 201, 'Project created successfully', saved);

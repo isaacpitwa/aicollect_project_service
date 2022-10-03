@@ -1,10 +1,11 @@
 import { Schema, model } from 'mongoose';
+import { userschema } from './shared';
 
 const QuestionaireSchema = new Schema({
     name: { type: String, required: true },
     version: { type: Number, required: true },
     regions: { type: Array, required: true, default: [] },
-    createdBy: { type: Number,required: true },
+    createdBy: userschema,
     client: { type: Number, required: true },
     module:{ type: Number, required: true},
     project: { 
