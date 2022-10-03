@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const ProjectSchema = new Schema({
-    _id: Types.ObjectId,
+    _id: Schema.Types.ObjectId,
     projectname: { type: String, required: true },
     description: { type: String,required: true },
     createdBy: { type: Number,required: true },

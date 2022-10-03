@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const RegistrationSchema = new Schema({
-    _id: Types.ObjectId,
+    _id: Schema.Types.ObjectId,
     questionaire: { 
         info: { 
             type: Types.ObjectId,

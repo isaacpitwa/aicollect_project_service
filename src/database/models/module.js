@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const ModuleSchema = new Schema({
-    _id: Types.ObjectId,
+    _id: Schema.Types.ObjectId,
     name: { type: String, required: true },
     description: { type: String, required: true },
     sector: {
