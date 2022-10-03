@@ -6,13 +6,10 @@ const QuestionaireSchema = new Schema({
     regions: { type: Array, required: true, default: [] },
     createdBy: { type: Number,required: true },
     client: { type: Number, required: true },
+    module:{ type: Number, required: true},
     project: { 
         type:Schema.Types.ObjectId,
         ref:'Project'
-    },
-    module: {  
-        type:Schema.Types.ObjectId,
-        ref:'Module' 
     },
     formFields: { type: Array, default: [] },
     status: {

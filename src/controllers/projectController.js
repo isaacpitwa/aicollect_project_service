@@ -71,7 +71,7 @@ class ProjectController {
   static async getUserProjects(req, res, next) {
     try {
       if (!req.body.clientId) {
-        return Response.badRequestError(res, 'Please provide a valid user id');
+        return Response.badRequestError(res, 'Please provide a valid client id');
       }
       const { roles, id, } = req.user;
       let projects;
