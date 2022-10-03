@@ -10,7 +10,7 @@ const ProjectSchema = new Schema({
     client:{ type:Number, required: true},
     status: {
         type:String,
-        enum:['draft','published','archived'],
+        enum:['draft','published','archived','deleted'],
     },
 },{
     timestamps:true
