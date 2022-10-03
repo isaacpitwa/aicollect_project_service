@@ -24,7 +24,7 @@ class ResponseController {
       for (let i = 0; i < answers.length; i += 1) {
         for (let j = 0; j < answers[i].components.length; j += 1) {
           if (answers[i].components[j].type === 'image' && answers[i].components[j].value) {
-            answers[i].components[j].value = await uploadImage(answers[i].components[j].value, 'aicollect_responses');
+            answers[i].components[j].value = await uploadImage(answers[i].components[j].value, 'aicollect_responses').url;
             console.log('Image uploaded ', answers[i].components[j].value);
           }
           if (answers[i].components[j].type === 'sub-section') {

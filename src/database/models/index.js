@@ -32,7 +32,7 @@ const projectschema = new Schema({
   projectOwner: { type: String, default: [] },
 }, { timestamps: true });
 
-/** Questionaires Created by the CLients */
+/** Questionaires Created by the Clients */
 const formSchema = new Schema({
   name: { type: String, required: true },
   version: { type: Number, required: true },
