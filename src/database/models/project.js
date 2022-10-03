@@ -15,4 +15,4 @@ const ProjectSchema = new Schema({
     timestamps:true
 })
 
-module.exports = model('Project',ProjectSchema);
+export default model('Project',ProjectSchema);

@@ -18,20 +18,16 @@ class ProjectController {
   static async createProject(req, res, next) {
     try {
       const {
-        projectname, description, userId, name, roles
+        name, description, userId, userName, roles,client
       } = req.body;
       const projectsModel = mongooseModels.projectModel;
-      let clientId;
-      if (roles === 'Owner') {
-        clientId = userId;
-      }
       const newProject = new projectsModel({
         _id: mongoose.Types.ObjectId(),
-        projectname,
+        name,
         description,
-        clientId,
+        client,
         projectOwner: clientId,
-        createdBy: { userId, name, roles },
+        createdBy: { id: userId, name:userName, roles },
       });
       newProject.save((error, saved) => {
         if (error) {
