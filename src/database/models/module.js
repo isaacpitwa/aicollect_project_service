@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 
 const ModuleSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     name: { type: String, required: true },
     description: { type: String, required: true },
     sector: {
@@ -16,6 +15,7 @@ const ModuleSchema = new Schema({
     status: {
         type: String,
         enum: ['draft', 'published', 'archived','deleted'],
+        default:'draft',
     },
 }, {
     timestamps: true

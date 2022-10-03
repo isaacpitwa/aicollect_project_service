@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 
 const QuestionaireSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     name: { type: String, required: true },
     version: { type: Number, required: true },
     regions: { type: Array, required: true, default: [] },
@@ -19,6 +18,7 @@ const QuestionaireSchema = new Schema({
     status: {
         type:String,
         enum:['draft','published','archived','deleted'],
+        default: 'draft',
     },
 
 },{

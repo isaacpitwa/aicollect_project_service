@@ -1,6 +1,13 @@
 import { Schema, model } from 'mongoose';
+/** Users, cloned from the Authentication Service */
+const userschema = new Schema({
+    userId: { type: Number, required: true },
+    name: { type: String, trim: true },
+    roles: { type: String, required: true },
+    supervisor: { type: Number, default:null},
+  });
 
-const RegistrationSchema = new Schema({
+const response ={
     _id: Schema.Types.ObjectId,
     questionaire: { 
         info: { 
@@ -20,9 +27,16 @@ const RegistrationSchema = new Schema({
     status: { 
         type: String,
         enum: ['draft', 'published', 'archived','deleted'],
+        default: 'published',
      },
+}
+
+/** Registration Records by the registration module */
+const Registration = new Schema({
+    latest: {...response},
+    original: {...response},
 }, {
     timestamps: true
-})
+});
 
-module.exports = model('Registration', RegistrationSchema);
+module.exports = model('Registration', Registration);

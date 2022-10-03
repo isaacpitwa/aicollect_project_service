@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 
 const ProjectSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     projectname: { type: String, required: true },
     description: { type: String,required: true },
     createdBy: { type: Number,required: true },
@@ -11,6 +10,7 @@ const ProjectSchema = new Schema({
     status: {
         type:String,
         enum:['draft','published','archived','deleted'],
+        default: 'published'
     },
 },{
     timestamps:true
