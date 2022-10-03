@@ -1,3 +1,5 @@
+
+import { Schema } from 'mongoose';
 /** Users, cloned from the Authentication Service */
 const userschema = new Schema({
     id: { type: Number, required: true },
