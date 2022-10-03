@@ -82,10 +82,8 @@ class ProjectController {
             return project;
           }
         );
-        console.log("Fetched  Supervisor Projects: ", projects);
       } else {
         projects = await mongooseModels.projectModel.find({ client: req.body.clientId });
-        console.log("Fetched Projects: ", projects);
       }
 
       return Response.customResponse(res, 200, 'Projects retrieved successfully', projects);
