@@ -21,22 +21,22 @@ class ResponseController {
       // TODO: FORMAT USER RESPONSE AND UPLOAD IMAGES TO CLOUDINARY
       const { answers } = req.body;
       console.log(answers);
-      for (let i = 0; i < answers.length; i += 1) {
-        for (let j = 0; j < answers[i].components.length; j += 1) {
-          if (answers[i].components[j].type === 'image' && answers[i].components[j].value) {
-            answers[i].components[j].value = await uploadImage(answers[i].components[j].value, 'aicollect_responses').url;
-            console.log('Image uploaded ', answers[i].components[j].value);
-          }
-          if (answers[i].components[j].type === 'sub-section') {
-            for (let z = 0; z < answers[i].components[j].components.length; z += 1) {
-              if (answers[i].components[j].components[z].type === 'image' && answers[i].components[j].components[z].value) {
-                const uploadResponse = await uploadImage(answers[i].components[j].components[z].value, 'aicollect_responses');
-                answers[i].components[j].components[z].value = uploadResponse.url;
-              }
-            }
-          }
-        }
-      }
+      // for (let i = 0; i < answers.length; i += 1) {
+      //   for (let j = 0; j < answers[i].components.length; j += 1) {
+      //     if (answers[i].components[j].type === 'image' && answers[i].components[j].value) {
+      //       answers[i].components[j].value = await uploadImage(answers[i].components[j].value, 'aicollect_responses').url;
+      //       console.log('Image uploaded ', answers[i].components[j].value);
+      //     }
+      //     if (answers[i].components[j].type === 'sub-section') {
+      //       for (let z = 0; z < answers[i].components[j].components.length; z += 1) {
+      //         if (answers[i].components[j].components[z].type === 'image' && answers[i].components[j].components[z].value) {
+      //           const uploadResponse = await uploadImage(answers[i].components[j].components[z].value, 'aicollect_responses');
+      //           answers[i].components[j].components[z].value = uploadResponse.url;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
       // UPLOAD PRESET ==> aicollect_field_responses
       const { fields } = req.body;
       delete req.body.fields;

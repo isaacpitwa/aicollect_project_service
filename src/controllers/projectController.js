@@ -136,29 +136,18 @@ class ProjectController {
     try {
       const projectId = req.params.id;
       const { roles, id, } = req.user;
-      // check for project from Redis server before dialing up the server
-      // eslint-disable-next-line no-unused-vars
       redisConnection.get('projectId', async (err, project) => {
         if (err) {
           return Response.badRequestError(res, 'Error occured when connecting to redis server');
         }
-        // if (project) {
-        //   return Response.customResponse(
-        //     res,
-        //     200,
-        //     'Project details retreieved from cache',
-        //     JSON.parse(project)
-        //   );
-        // }
-        // dial up server
         const projectFromDB = await mongooseModels.projectModel.findOne({ _id: projectId });
 
         if (!projectFromDB) {
           return Response.notFoundError(res, 'Project was either deleted or does not exist');
         }
-        // Remmove users not supervised by the user
+        // Remove users not supervised by the user
         if (roles === 'Supervisor') {
-          projectFromDB.projectTeam = projectFromDB.projectTeam.filter(
+          projectFromDB.team = projectFromDB.team.filter(
             (member) => member.supervisor === id
           );
         }
