@@ -118,7 +118,7 @@ class ProjectController {
         return Response.notFoundError(res, 'Project with given id was not found');
       }
       const updatedProject = await mongooseModels.projectModel
-        .updateOne({ _id: projectId }, { $push: { projectTeam: newTeamMember } });
+        .updateOne({ _id: projectId }, { $push: { team: newTeamMember } });
       return Response.customResponse(res, 200, 'Project member added successfully', updatedProject);
     } catch (error) {
       return next(error);
