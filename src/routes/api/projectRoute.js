@@ -87,6 +87,11 @@ router
   .route('/forms/update')
   .post(verify, FormController.updateForm)
   .all(method);
+
+router
+  .route('/forms/publish/:formId')
+  .get(verify, FormController.publishForm)
+  .all(method);
 router
   .route('/forms/:formId')
   .get(verify, FormController.getFormDetails)
