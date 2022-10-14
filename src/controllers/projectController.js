@@ -102,11 +102,11 @@ class ProjectController {
   static async addMembersToProject(req, res, next) {
     try {
       const {
-        userId, name, role, projectId, createdBy, supervisor
+        id, name, role, projectId, createdBy, supervisor
       } = req.body;
       // console.log(req.body);
       const newTeamMember = {
-        userId,
+        id,
         name,
         role,
         createdBy,

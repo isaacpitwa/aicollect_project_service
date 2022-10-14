@@ -18,9 +18,9 @@ const QuestionaireSchema = new Schema({
         enum:['draft','published','archived','deleted'],
         default: 'draft',
     },
-
+    version: { type: Number, required: true },
 },{
     timestamps:true
 })
 
-module.exports = model('Project',QuestionaireSchema);
+export default model('Questionaire',QuestionaireSchema);

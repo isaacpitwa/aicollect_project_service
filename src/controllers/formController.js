@@ -19,7 +19,8 @@ class FormController {
       const newForm = new formModel({ ...form });
       newForm.save((error, saved) => {
         if (error) {
-          return Response.badRequestError(res, 'Something went wrong');
+          console.log(error);
+          return Response.badRequestError(res, error._message);
         }
         return Response.customResponse(res, 201, 'Form created successfully', saved);
       });
