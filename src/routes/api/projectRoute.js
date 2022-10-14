@@ -89,9 +89,15 @@ router
   .all(method);
 
 router
-  .route('/forms/publish/:formId')
+  .route('/form/publish/:formId')
   .get(verify, FormController.publishForm)
   .all(method);
+
+  router
+  .route('/form/archive/:formId')
+  .get(verify, FormController.archiveForm)
+  .all(method);
+
 router
   .route('/forms/:formId')
   .get(verify, FormController.getFormDetails)

@@ -49,25 +49,47 @@ class FormController {
     }
   }
 
-   /**
-   * Creates a new Publish  form
-   * @param {object} req Express Request
-   * @param {object} res Express Response
-   * @param {Function} next Express Next Function
-   * @returns {object} Response from create new Form Endpoint
-   */
-    static async publishForm(req, res, next) {
-      try {
-        const { formModel } = mongooseModels;
-        const updatedAt = Date.now();
-        const updateForm = await formModel.findOneAndUpdate({
-          _id: req.body.formId
-        }, {updatedAt,status:'published'}, { new: true });
-        return Response.customResponse(res, 200, 'Form Published successfully', updateForm);
-      } catch (error) {
-        return next(error);
-      }
+  /**
+  *  Publishes   form
+  * @param {object} req Express Request
+  * @param {object} res Express Response
+  * @param {Function} next Express Next Function
+  * @returns {object} Response from create new Form Endpoint
+  */
+  static async publishForm(req, res, next) {
+    try {
+      const { formModel } = mongooseModels;
+      const { formId } = req.params;
+      const updatedAt = Date.now();
+      const updateForm = await formModel.findOneAndUpdate({
+        _id: formId
+      }, { updatedAt, status: 'published' }, { new: true });
+      return Response.customResponse(res, 200, 'Form Published successfully', updateForm);
+    } catch (error) {
+      return next(error);
     }
+  }
+
+  /**
+* Archive  form
+* @param {object} req Express Request
+* @param {object} res Express Response
+* @param {Function} next Express Next Function
+* @returns {object} Response from create new Form Endpoint
+*/
+  static async archiveForm(req, res, next) { 
+    try {
+      const { formModel } = mongooseModels;
+      const { formId } = req.params;
+      const updatedAt = Date.now();
+      const updateForm = await formModel.findOneAndUpdate({
+        _id: formId
+      }, { updatedAt, status: 'archived' }, { new: true });
+      return Response.customResponse(res, 200, 'Form Archived successfully', updateForm);
+    } catch (error) {
+      return next(error);
+    }
+  }
 
   /**
    * @description Retrieve all the Forms
