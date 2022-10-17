@@ -1,5 +1,6 @@
 import express from 'express';
 import projectRouter from './projectRoute';
+import submoduleRouter from './submoduleRoute';
 // import formRouter from './formRoute';
 // import taskRouter from './taskRoute';
 
@@ -7,6 +8,7 @@ const router = express.Router();
 
 // Register Routes to app
 router.use('', projectRouter);
+router.use('/submodule', submoduleRouter);
 
 router.use((err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') {
