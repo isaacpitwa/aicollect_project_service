@@ -1,3 +1,4 @@
+import express from 'express';
 import verify from '../../middleware/auth';
 import method from '../../utils/method';
 import Access from '../../middleware/userRoles';
