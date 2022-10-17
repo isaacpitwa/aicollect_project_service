@@ -1,6 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import projectModel from './project';
 import formModel from './questionaire';
+import submoduleModel from './submodule';
 
 /** Users, cloned from the Authentication Service */
 const userschema = new Schema({
@@ -147,6 +148,8 @@ const templateModel = model('Template', templateSchema);
 const fieldModel = model('Field', fieldSchema);
 const fieldResponseModel = model('FieldResponse', fieldResponseSchema);
 
+
+
 const mongooseModels = {
   userModel,
   sectorModel,
@@ -157,7 +160,8 @@ const mongooseModels = {
   taskModel,
   templateModel,
   fieldModel,
-  fieldResponseModel
+  fieldResponseModel,
+  submoduleModel,
 };
 
 export default mongooseModels;
