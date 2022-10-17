@@ -1,5 +1,6 @@
 import SessionManager from '../utils/sessionManager';
 import Response from '../utils/response';
+import UserService from '../services/UserService';
 
 const verify = async (req, res, next) => {
   try {
@@ -11,11 +12,11 @@ const verify = async (req, res, next) => {
     // Check redis server for key with email
     const result = await SessionManager.verifyToken(payload.email);
     if (result === null) return Response.authenticationError(res, 'User not logged in');
-    // const { email } = payload;
+    const { email } = payload;
     // Check for updated user role from DB and not from token;
-    // const { roles } = await UserService.findUserByEmail({ email });
+    const user = await UserService.findUser(token);
     // payload.roles = roles;
-    req.user = payload;
+    req.user = user;
     next();
   } catch (error) {
     return Response.authenticationError(res, 'Invalid or expired token used');

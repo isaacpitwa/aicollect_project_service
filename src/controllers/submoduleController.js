@@ -32,7 +32,8 @@ class SubmoduleController {
       });
       newsubmodule.save((error, saved) => {
         if (error) {
-          return Response.badRequestError(res, 'Submodule could not be created');
+          console.log(error);
+          return Response.badRequestError(res, error._message ?? 'Submodule could not be created');
         }
         return Response.customResponse(res, 201, 'Submodule created successfully', saved);
       });
