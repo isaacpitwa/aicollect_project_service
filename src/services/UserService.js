@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-catch */
 
+import Authconnector from "../utils/connector";
+
 /** Class representing User services */
 class UserService {
   /**
@@ -9,13 +11,11 @@ class UserService {
    */
   static async findUser(token) {
     try {
-      const user = await fetch(`${process.env.API_URL}/check-user`,{
-        method: 'GET',
+      const user = await Authconnector.get(`/check-user`,{
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}` 
         }
-      });
+       });
       return user;
     } catch (error) {
       console.log("Find User ERROR: ", error);
