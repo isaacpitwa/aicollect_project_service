@@ -7,7 +7,9 @@ const SubmoduleSchema = new Schema({
     client: { type: Number, required: true },
     project: { 
         type:Schema.Types.ObjectId,
-        ref:'Project'
+        ref:'Project',
+        unique: true,
+        index: { unique: true }
     },
     status: {
         type:String,
@@ -17,5 +19,6 @@ const SubmoduleSchema = new Schema({
 },{
     timestamps:true
 })
+SubmoduleSchema.path('project').index({ unique: true });
 
 export default model('Submodule',SubmoduleSchema);

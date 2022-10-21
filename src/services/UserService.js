@@ -11,12 +11,15 @@ class UserService {
    */
   static async findUser(token) {
     try {
-      const user = await Authconnector.get(`/check-user`,{
+      const response = await Authconnector.get(`/check-user`,{
         headers: {
           Authorization: `Bearer ${token}` 
         }
        });
-      return user;
+       if(response.data.status === 200){
+          return response.data.data;
+       }
+      return null;
     } catch (error) {
       console.log("Find User ERROR: ", error);
       return null;

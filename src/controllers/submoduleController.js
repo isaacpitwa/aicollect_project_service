@@ -17,13 +17,13 @@ class SubmoduleController {
     try {
       const { name, project,module } = req.body;
       const { id,firstname,lastname,client,roles } = req.user;
+
       const newsubmodule = new submoduleModel({
         _id: mongoose.Types.ObjectId(),
         name,
         createdBy: {
             id,
-            firstname,
-            lastname,
+            name: `${firstname} ${lastname}`,
             roles,
         },
         module,

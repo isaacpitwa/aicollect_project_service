@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const Authconnector = axios.create({
-    baseURL: `${process.env.API_URL}/`,
+    baseURL: `${process.env.AUTH_SERVICE_URL}/`,
     headers: {
       'Content-Type': 'application/json',
     },
