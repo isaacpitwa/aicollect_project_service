@@ -19,7 +19,8 @@ class FormController {
       const newForm = new formModel({ ...form });
       newForm.save((error, saved) => {
         if (error) {
-          return Response.badRequestError(res, 'Something went wrong');
+          console.log(error);
+          return Response.badRequestError(res, error._message);
         }
         return Response.customResponse(res, 201, 'Form created successfully', saved);
       });
@@ -43,6 +44,48 @@ class FormController {
         _id: req.body.formId
       }, req.body, { new: true });
       return Response.customResponse(res, 200, 'Form Updated successfully', updateForm);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+  *  Publishes   form
+  * @param {object} req Express Request
+  * @param {object} res Express Response
+  * @param {Function} next Express Next Function
+  * @returns {object} Response from create new Form Endpoint
+  */
+  static async publishForm(req, res, next) {
+    try {
+      const { formModel } = mongooseModels;
+      const { formId } = req.params;
+      const updatedAt = Date.now();
+      const updateForm = await formModel.findOneAndUpdate({
+        _id: formId
+      }, { updatedAt, status: 'published' }, { new: true });
+      return Response.customResponse(res, 200, 'Form Published successfully', updateForm);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+* Archive  form
+* @param {object} req Express Request
+* @param {object} res Express Response
+* @param {Function} next Express Next Function
+* @returns {object} Response from create new Form Endpoint
+*/
+  static async archiveForm(req, res, next) { 
+    try {
+      const { formModel } = mongooseModels;
+      const { formId } = req.params;
+      const updatedAt = Date.now();
+      const updateForm = await formModel.findOneAndUpdate({
+        _id: formId
+      }, { updatedAt, status: 'archived' }, { new: true });
+      return Response.customResponse(res, 200, 'Form Archived successfully', updateForm);
     } catch (error) {
       return next(error);
     }
@@ -96,14 +139,17 @@ class FormController {
   static async getUserFormsForSpecificModule(req, res, next) {
     try {
       const { formModel } = mongooseModels;
-      const { clientId, projectId } = req.body;
-      if (!clientId) {
-        return Response.badRequestError(res, 'CliendId was not provided');
+      const { client, project, module } = req.body;
+      if (!client) {
+        return Response.badRequestError(res, 'Client was not provided');
       }
-      if (!projectId) {
-        return Response.badRequestError(res, 'projectId was not provided');
+      if (!project) {
+        return Response.badRequestError(res, 'project was not provided');
       }
-      const forms = await formModel.find({ clientId, projectId }).exec();
+      if (!module) {
+        return Response.badRequestError(res, 'Module was not provided');
+      }
+      const forms = await formModel.find({ client, project, module }).exec();
       return Response.customResponse(res, 200, 'Module Forms retreived successfully', forms);
     } catch (error) {
       return next(error);

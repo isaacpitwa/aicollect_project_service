@@ -1,10 +1,14 @@
 import { Schema, model, Types } from 'mongoose';
+import projectModel from './project';
+import formModel from './questionaire';
+import submoduleModel from './submodule';
 
 /** Users, cloned from the Authentication Service */
 const userschema = new Schema({
   userId: { type: Number, required: true },
   name: { type: String, trim: true },
-  roles: { type: String, required: true }
+  roles: { type: String, required: true },
+  supervisor: { type: Number, default:null},
 });
 
 /** Sectors created by Super Admin User (Users register under a specific sector) */
@@ -29,10 +33,9 @@ const projectschema = new Schema({
   isDeleted: { type: Boolean, default: false },
   projectTeam: { type: Array, default: [] },
   projectOwner: { type: String, default: [] },
-  sector: { type: Types.ObjectId, ref: 'Sector' }
 }, { timestamps: true });
 
-/** Questionaires Created by the CLients */
+/** Questionaires Created by the Clients */
 const formSchema = new Schema({
   name: { type: String, required: true },
   version: { type: Number, required: true },
@@ -136,14 +139,16 @@ const fieldResponseSchema = new Schema({
 
 const userModel = model('User', userschema);
 const sectorModel = model('Sector', sectorschema);
-const projectModel = model('Project', projectschema);
+// const projectModel = model('Project', projectschema);
 const moduleModel = model('Module', moduleschema);
-const formModel = model('Questionaire', formSchema);
+// const formModel = model('Questionaire', formSchema);
 const responseModel = model('Response', responseSchema);
 const taskModel = model('Task', taskSchema);
 const templateModel = model('Template', templateSchema);
 const fieldModel = model('Field', fieldSchema);
 const fieldResponseModel = model('FieldResponse', fieldResponseSchema);
+
+
 
 const mongooseModels = {
   userModel,
@@ -155,7 +160,8 @@ const mongooseModels = {
   taskModel,
   templateModel,
   fieldModel,
-  fieldResponseModel
+  fieldResponseModel,
+  submoduleModel,
 };
 
 export default mongooseModels;

@@ -18,23 +18,20 @@ class ProjectController {
   static async createProject(req, res, next) {
     try {
       const {
-        projectname, description, userId, name, roles
+        name, description, userId, userName, roles,client
       } = req.body;
       const projectsModel = mongooseModels.projectModel;
-      let clientId;
-      if (roles === 'Owner') {
-        clientId = userId;
-      }
       const newProject = new projectsModel({
         _id: mongoose.Types.ObjectId(),
-        projectname,
+        name,
         description,
-        clientId,
-        projectOwner: clientId,
-        createdBy: { userId, name, roles },
+        client,
+        team:[],
+        createdBy: { id: userId, name:userName, roles },
       });
       newProject.save((error, saved) => {
         if (error) {
+          console.log("Error: ", error);
           return Response.badRequestError(res, 'Project could not be created');
         }
         return Response.customResponse(res, 201, 'Project created successfully', saved);
@@ -71,24 +68,22 @@ class ProjectController {
   static async getUserProjects(req, res, next) {
     try {
       if (!req.body.clientId) {
-        return Response.badRequestError(res, 'Please provide a valid user id');
+        return Response.badRequestError(res, 'Please provide a valid client id');
       }
       const { roles, id, } = req.user;
       let projects;
-      if (['Owner', 'Admin'].includes(roles)) {
-        projects = await mongooseModels.projectModel.find({ projectOwner: req.body.clientId });
-      } else if (roles === 'Supervisor') {
+        if (roles === 'Supervisor') {
         projects = await mongooseModels.projectModel.find({
-          'projectTeam.supervisor': id
-        }).populate('sector').populate('modules');
+          'team.supervisor': id
+        });
         projects = projects.map(
           (project) => {
-            project.projectTeam = project.projectTeam.filter((member) => member.supervisor === id);
+            project.team = project.team.filter((member) => member.supervisor === id);
             return project;
           }
         );
       } else {
-        projects = await mongooseModels.projectModel.find({ 'projectTeam.userId': id });
+        projects = await mongooseModels.projectModel.find({ client: req.body.clientId });
       }
 
       return Response.customResponse(res, 200, 'Projects retrieved successfully', projects);
@@ -107,11 +102,11 @@ class ProjectController {
   static async addMembersToProject(req, res, next) {
     try {
       const {
-        userId, name, role, projectId, createdBy, supervisor
+        id, name, role, projectId, createdBy, supervisor
       } = req.body;
       // console.log(req.body);
       const newTeamMember = {
-        userId,
+        id,
         name,
         role,
         createdBy,
@@ -123,7 +118,7 @@ class ProjectController {
         return Response.notFoundError(res, 'Project with given id was not found');
       }
       const updatedProject = await mongooseModels.projectModel
-        .updateOne({ _id: projectId }, { $push: { projectTeam: newTeamMember } });
+        .updateOne({ _id: projectId }, { $push: { team: newTeamMember } });
       return Response.customResponse(res, 200, 'Project member added successfully', updatedProject);
     } catch (error) {
       return next(error);
@@ -141,29 +136,18 @@ class ProjectController {
     try {
       const projectId = req.params.id;
       const { roles, id, } = req.user;
-      // check for project from Redis server before dialing up the server
-      // eslint-disable-next-line no-unused-vars
       redisConnection.get('projectId', async (err, project) => {
         if (err) {
           return Response.badRequestError(res, 'Error occured when connecting to redis server');
         }
-        // if (project) {
-        //   return Response.customResponse(
-        //     res,
-        //     200,
-        //     'Project details retreieved from cache',
-        //     JSON.parse(project)
-        //   );
-        // }
-        // dial up server
         const projectFromDB = await mongooseModels.projectModel.findOne({ _id: projectId });
 
         if (!projectFromDB) {
           return Response.notFoundError(res, 'Project was either deleted or does not exist');
         }
-        // Remmove users not supervised by the user
+        // Remove users not supervised by the user
         if (roles === 'Supervisor') {
-          projectFromDB.projectTeam = projectFromDB.projectTeam.filter(
+          projectFromDB.team = projectFromDB.team.filter(
             (member) => member.supervisor === id
           );
         }

@@ -27,7 +27,7 @@ router
   .get(verify, ProjectController.getProjects)
   .all(method);
 router
-  .route('/projects/userProjects')
+  .route('/user/projects')
   .post(verify, Access.accessToProjects, ProjectController.getUserProjects)
   .all(method);
 
@@ -87,6 +87,17 @@ router
   .route('/forms/update')
   .post(verify, FormController.updateForm)
   .all(method);
+
+router
+  .route('/form/publish/:formId')
+  .get(verify, FormController.publishForm)
+  .all(method);
+
+  router
+  .route('/form/archive/:formId')
+  .get(verify, FormController.archiveForm)
+  .all(method);
+
 router
   .route('/forms/:formId')
   .get(verify, FormController.getFormDetails)
@@ -151,9 +162,10 @@ router
   .route('/sectors/create')
   .post(verify, Access.accessToEditAndCreateSectors, SectorController.createSector)
   .all(method);
+
 router
   .route('/sectors/:sectorId')
-  .get(verify, SectorController.getOneSector)
+  .get(verify, Access.accessToEditAndCreateSectors, SectorController.getOneSector)
   .all(method);
 router
   .route('/sectors/delete/:sectorId')
